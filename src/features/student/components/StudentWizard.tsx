@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useStudentWizard, WIZARD_STEPS } from '../hooks/useStudentWizard';
 import { useStudentStore } from '../../../store/useStudentStore';
 import { useSubjectStore } from '../../../store/useSubjectStore';
-import { calculateRiskScore } from '../../../utils/riskCalculator';
+import { calculateRiskScore, MAX_CREDITS, MIN_CREDITS } from '../../../utils/riskCalculator';
 import StepIndicator from '../../../components/ui/StepIndicator';
 import Button from '../../../components/ui/Button';
 import FileUpload from '../../../components/ui/FileUpload';
@@ -62,7 +62,7 @@ const StudentWizard = React.memo(() => {
     const totalCredits = subjects
       .filter(s => proposed.includes(s.id))
       .reduce((sum, s) => sum + s.credits, 0);
-    return totalCredits >= 20 && totalCredits <= 36;
+    return totalCredits >= MIN_CREDITS && totalCredits <= MAX_CREDITS;
   }, [currentStudent, subjects]);
 
   const canProceedStep6 = wizardData.signature.trim().length >= 10;
@@ -202,7 +202,7 @@ const StudentWizard = React.memo(() => {
             />
             {!canProceedStep5 && (
               <p className="mt-3 text-sm text-amber-600">
-                * Debes seleccionar materias con entre 20 y 36 créditos para continuar. ({totalCredits} créditos seleccionados)
+                * Debes seleccionar materias con entre {MIN_CREDITS} y {MAX_CREDITS} créditos para continuar. ({totalCredits} créditos seleccionados)
               </p>
             )}
           </WizardStep>

@@ -10,6 +10,7 @@ import {
 } from '@dnd-kit/core';
 import { Subject } from '../../../types/subject';
 import { checkPrerequisites } from '../../../utils/subjectValidator';
+import { MAX_SPECIAL_SUBJECTS, MAX_CREDITS, MIN_CREDITS } from '../../../utils/riskCalculator';
 import Badge from '../../../components/ui/Badge';
 
 interface SubjectCardItemProps {
@@ -123,7 +124,7 @@ const SubjectDndPanel = React.memo<SubjectDndPanelProps>(({
   );
 
   const isSubjectBlocked = useCallback((subjectId: string) => {
-    if (specialCount >= 2 && !proposedSubjects.includes(subjectId)) return true;
+    if (specialCount >= MAX_SPECIAL_SUBJECTS && !proposedSubjects.includes(subjectId)) return true;
     return !checkPrerequisites(subjectId, approvedSubjects, allSubjects);
   }, [specialCount, proposedSubjects, approvedSubjects, allSubjects]);
 
@@ -157,9 +158,9 @@ const SubjectDndPanel = React.memo<SubjectDndPanelProps>(({
 
   const warnings = useMemo(() => {
     const warns: string[] = [];
-    if (totalCredits > 36) warns.push('Excede el máximo de 36 créditos.');
-    if (totalCredits > 0 && totalCredits < 20) warns.push('Mínimo de 20 créditos requeridos.');
-    if (specialCount >= 2) warns.push('Máximo 2 materias especiales. No se pueden agregar más materias.');
+    if (totalCredits > MAX_CREDITS) warns.push(`Excede el máximo de ${MAX_CREDITS} créditos.`);
+    if (totalCredits > 0 && totalCredits < MIN_CREDITS) warns.push(`Mínimo de ${MIN_CREDITS} créditos requeridos.`);
+    if (specialCount >= MAX_SPECIAL_SUBJECTS) warns.push(`Máximo ${MAX_SPECIAL_SUBJECTS} materias especiales. No se pueden agregar más materias.`);
     return warns;
   }, [totalCredits, specialCount]);
 

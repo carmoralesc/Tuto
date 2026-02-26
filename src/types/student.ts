@@ -15,8 +15,6 @@ export interface Student {
   status: StudentStatus;
 }
 
-export type RiskLevel = 'HIGH' | 'MEDIUM' | 'LOW';
-
 export interface FailureReason {
   subjectId: string;
   reason: string;
