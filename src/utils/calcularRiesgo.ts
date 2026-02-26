@@ -1,7 +1,7 @@
 import type { Estudiante, Materia, NivelRiesgo } from '../types';
 
 export function calcularPuntajeRiesgo(
-  estudiante: Pick<Estudiante, 'materiasEspeciales' | 'materiasRepetidas' | 'materiasProguestas' | 'materiasAprobadas'>,
+  estudiante: Pick<Estudiante, 'materiasEspeciales' | 'materiasRepetidas' | 'materiasPropuestas' | 'materiasAprobadas'>,
   todasMaterias: Materia[]
 ): number {
   let puntaje = 0;
@@ -14,7 +14,7 @@ export function calcularPuntajeRiesgo(
   if (numRepetidas >= 3) puntaje += 25;
   else if (numRepetidas === 2) puntaje += 15;
 
-  const creditos = calcularCreditos(estudiante.materiasProguestas, todasMaterias);
+  const creditos = calcularCreditos(estudiante.materiasPropuestas, todasMaterias);
   if (creditos > 36) puntaje += 30;
   else if (creditos < 20) puntaje += 20;
 
@@ -32,11 +32,11 @@ export function calcularCreditos(materiaIds: string[], todasMaterias: Materia[])
 }
 
 export function contarViolacionesPrerequisitos(
-  estudiante: Pick<Estudiante, 'materiasAprobadas' | 'materiasProguestas'>,
+  estudiante: Pick<Estudiante, 'materiasAprobadas' | 'materiasPropuestas'>,
   todasMaterias: Materia[]
 ): number {
   let violaciones = 0;
-  for (const materiaId of estudiante.materiasProguestas) {
+  for (const materiaId of estudiante.materiasPropuestas) {
     const materia = todasMaterias.find(m => m.id === materiaId);
     if (!materia) continue;
     for (const prereqId of materia.prerequisitos) {

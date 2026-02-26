@@ -48,7 +48,7 @@ export const ModalDetalle: React.FC<Props> = ({ estudiante, onCerrar }) => {
           <div>
             <h4 className="font-semibold text-gray-700 mb-3">Carga Académica Propuesta</h4>
             <div className="grid grid-cols-2 gap-2">
-              {estudiante.materiasProguestas.map(id => {
+              {estudiante.materiasPropuestas.map(id => {
                 const m = getMateriaById(id);
                 const esEspecial = estudiante.materiasEspeciales.includes(id);
                 return (
@@ -60,7 +60,7 @@ export const ModalDetalle: React.FC<Props> = ({ estudiante, onCerrar }) => {
               })}
             </div>
             <p className="text-sm text-gray-600 mt-2 font-medium">
-              Total: {calcularCreditos(estudiante.materiasProguestas, materias)} créditos
+              Total: {calcularCreditos(estudiante.materiasPropuestas, materias)} créditos
             </p>
           </div>
 

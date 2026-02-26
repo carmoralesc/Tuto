@@ -187,7 +187,7 @@ export const Paso5CargaAcademica: React.FC = () => {
                 const esEspecial = materiasEspeciales.includes(materia.id);
                 const bloqueada = !cumple || (bloqueadaPorMaxEspeciales && esEspecial);
                 const razon = !cumple
-                  ? `Prerequisitos faltantes: ${faltantes.join(', ')}`
+                  ? `Prerrequisitos faltantes: ${faltantes.join(', ')}`
                   : bloqueadaPorMaxEspeciales && esEspecial
                   ? 'Máximo de especiales alcanzado'
                   : undefined;

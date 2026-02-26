@@ -20,7 +20,7 @@ export interface Estudiante {
   materiasReprobadas: string[];
   materiasRepetidas: string[];
   materiasEspeciales: string[];
-  materiasProguestas: string[];
+  materiasPropuestas: string[];
   puntajeRiesgo: number;
   estado: EstadoEstudiante;
 }

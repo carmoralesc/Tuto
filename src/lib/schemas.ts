@@ -18,7 +18,7 @@ export const EstudianteSchema = z.object({
   materiasReprobadas: z.array(z.string()),
   materiasRepetidas: z.array(z.string()),
   materiasEspeciales: z.array(z.string()),
-  materiasProguestas: z.array(z.string()),
+  materiasPropuestas: z.array(z.string()),
   puntajeRiesgo: z.number().min(0),
   estado: z.enum(['MODIFICADO', 'PENDIENTE', 'NO_ENTREGADO', 'APROBADO']),
 });

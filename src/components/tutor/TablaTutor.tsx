@@ -45,7 +45,7 @@ export const TablaTutor: React.FC = () => {
     return [...estudiantes]
       .map(e => ({
         ...e,
-        creditos: calcularCreditos(e.materiasProguestas, materias),
+        creditos: calcularCreditos(e.materiasPropuestas, materias),
         apellidos: `${e.primerApellido} ${e.segundoApellido}`,
       }))
       .sort((a, b) => {
