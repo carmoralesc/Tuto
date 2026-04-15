@@ -6,30 +6,45 @@ export const mockStudents: Student[] = [
         firstName: 'María',
         lastName: 'González',
         studentId: 'A00123456',
-        enrolledProgram: 'Ingeniería en Sistemas Computacionales',
+        enrolledProgram: 'Ingeniería en Computación',
         academicHistory: [
+            // MAT101: aprobó en ordinario - eval ord (nivel 1)
             {
                 subjectCode: 'MAT101',
+                level: 1,
+                status: 'aprobado',
                 grade: 85,
-                status: 'approved',
-                attemptNumber: 1,
                 semester: '2025A',
+                source: 'cardex',
+            },
+            // FIS101: reprobó ordinario eval ord (nivel 1), luego reprobó segunda op (nivel 2)
+            {
+                subjectCode: 'FIS101',
+                level: 1,
+                status: 'reprobado',
+                grade: 45,
+                semester: '2025A',
+                source: 'cardex',
             },
             {
                 subjectCode: 'FIS101',
-                grade: 45,
-                status: 'failed',
-                attemptNumber: 1,
+                level: 2,
+                status: 'reprobado',
+                grade: 50,
                 semester: '2025A',
+                source: 'cardex',
+                failureReason: { category: 'academico', description: 'No entregó proyecto final' }
             },
+            // PROG101: aprobó en primera
             {
                 subjectCode: 'PROG101',
+                level: 1,
+                status: 'aprobado',
                 grade: 90,
-                status: 'approved',
-                attemptNumber: 1,
                 semester: '2025A',
+                source: 'cardex',
             },
-            // MAT102 no la ha cursado aún
+            // MAT102: no la ha cursado
         ],
     },
 ];

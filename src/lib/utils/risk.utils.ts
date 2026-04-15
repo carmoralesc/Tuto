@@ -1,58 +1,63 @@
 import type { Student } from '@/types/student.types';
 import type { Subject } from '@/types/subject.types';
+import { getNextAttemptLevel, getCategoryFromLevel } from './subject-level.utils';
 
 /**
- * Calcula un puntaje de riesgo académico (0-100).
- * Factores considerados:
- * - Promedio general
- * - Cantidad de materias reprobadas
- * - Repeticiones de materias
- * - Dificultad de la carga actual (créditos)
+ * Calcula el puntaje de riesgo académico (0-100) para una carga propuesta.
  */
-export function calculateRiskScore(
-    student: Student,
-    selectedSubjects: Subject[]
-): number {
-    let score = 50; // Base neutral
+export function calculateRiskScore(student: Student, selectedSubjects: Subject[]): number {
+    let score = 0;
 
-    // Factor 1: Promedio (escala 0-100)
-    const grades = student.academicHistory
-        .filter(r => r.status === 'approved')
-        .map(r => r.grade);
-    const avg = grades.length > 0
-        ? grades.reduce((a, b) => a + b, 0) / grades.length
-        : 70; // sin historial, asumimos promedio regular
+    let especialCount = 0;
+    let repiteCount = 0;
 
-    score += (avg - 70) * 0.5; // Si avg=90 → +10 puntos; avg=50 → -10 puntos
+    selectedSubjects.forEach(subject => {
+        const attempts = student.academicHistory.filter(a => a.subjectCode === subject.code);
+        const nextLevel = getNextAttemptLevel(attempts);
 
-    // Factor 2: Materias reprobadas (penalización por cada una)
-    const failedCount = student.academicHistory.filter(r => r.status === 'failed').length;
-    score -= failedCount * 5;
-
-    // Factor 3: Repeticiones (más de un intento en la misma materia)
-    const subjectAttempts = new Map<string, number>();
-    student.academicHistory.forEach(r => {
-        subjectAttempts.set(r.subjectCode, (subjectAttempts.get(r.subjectCode) || 0) + 1);
+        if (nextLevel !== null) {
+            const category = getCategoryFromLevel(nextLevel);
+            if (category === 'especial') especialCount++;
+            else if (category === 'repite') repiteCount++;
+        } else {
+            const last = attempts[attempts.length - 1];
+            if (last && last.level === 6 && last.status === 'reprobado') {
+                especialCount += 2; // Penalización extra
+            }
+        }
     });
-    const repetitions = Array.from(subjectAttempts.values()).filter(count => count > 1).length;
-    score -= repetitions * 8;
 
-    // Factor 4: Carga actual (créditos vs histórico)
-    const currentCredits = selectedSubjects.reduce((sum, s) => sum + s.credits, 0);
-    const historicalMaxCredits = 30; // simplificación
-    if (currentCredits > historicalMaxCredits) {
-        score -= (currentCredits - historicalMaxCredits) * 2;
-    }
+    // Aplicar ponderaciones según reglas dadas
+    if (especialCount >= 2) score += 50;
+    else if (especialCount === 1) score += 30;
 
-    // Asegurar rango 0-100
-    return Math.min(100, Math.max(0, Math.round(score)));
+    if (repiteCount >= 3) score += 25;
+    else if (repiteCount === 2) score += 15;
+    else if (repiteCount === 1) score += 5;
+
+    // Factor créditos
+    const totalCredits = selectedSubjects.reduce((sum, s) => sum + s.credits, 0);
+    if (totalCredits > 36) score += 30;
+    else if (totalCredits < 20) score += 20;
+
+    // Factor seriación (cada violación suma 15)
+    const approvedCodes = student.academicHistory
+        .filter(a => a.status === 'aprobado')
+        .map(a => a.subjectCode);
+
+    selectedSubjects.forEach(subject => {
+        const missingPrereq = subject.prerequisites.some(prereq => !approvedCodes.includes(prereq));
+        if (missingPrereq) score += 15;
+    });
+
+    return Math.min(100, Math.max(0, score));
 }
 
 /**
  * Clasifica el riesgo en categorías para UI.
  */
 export function getRiskCategory(score: number): 'low' | 'medium' | 'high' {
-    if (score >= 70) return 'low';
-    if (score >= 40) return 'medium';
+    if (score < 30) return 'low';
+    if (score < 60) return 'medium';
     return 'high';
 }
