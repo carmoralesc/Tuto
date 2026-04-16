@@ -1,21 +1,60 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "@/App";
-import StudentWizardPage from "@/pages/StudentWizardPage";
-import TutorDashboardPage from "@/pages/TutorDashboardPage";
-import NotFoundPage from "@/pages/NotFoundPage";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
+import App from "../App";
+import TutorDashboardPage from "../pages/TutorDashboardPage";
+import NotFoundPage from "../pages/NotFoundPage";
+import { PersonalDataStep } from "@/features/student-wizard/components/PersonalDataStep";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // App contiene el MainLayout
+    element: <App />,
     children: [
       {
         index: true,
-        element: <StudentWizardPage />, // Página por defecto (por ahora)
+        element: <Navigate to="/wizard/paso-1" replace />,
       },
       {
         path: "dashboard",
         element: <TutorDashboardPage />,
+      },
+      {
+        path: "wizard",
+        children: [
+          {
+            path: "paso-1",
+            element: <PersonalDataStep />,
+          },
+          {
+            path: "paso-2",
+            element: <div>Paso 2 - Subida de archivos (en construcción)</div>,
+          },
+          {
+            path: "paso-3",
+            element: <div>Paso 3 - Materias reprobadas (en construcción)</div>,
+          },
+          {
+            path: "paso-4",
+            element: <div>Paso 4 - Motivos (en construcción)</div>,
+          },
+          {
+            path: "paso-5",
+            element: (
+              <div>Paso 5 - Selección de materias (en construcción)</div>
+            ),
+          },
+          {
+            path: "paso-6",
+            element: <div>Paso 6 - Firma (en construcción)</div>,
+          },
+          {
+            path: "paso-7",
+            element: <div>Paso 7 - Confirmación (en construcción)</div>,
+          },
+        ],
       },
       {
         path: "*",
