@@ -6,7 +6,10 @@ import {
 import App from "../App";
 import TutorDashboardPage from "../pages/TutorDashboardPage";
 import NotFoundPage from "../pages/NotFoundPage";
-import { PersonalDataStep } from "@/features/student-wizard/components/PersonalDataStep";
+import {
+  PersonalDataStep,
+  FileUploadStep,
+} from "@/features/student-wizard/components";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +33,7 @@ const router = createBrowserRouter([
           },
           {
             path: "paso-2",
-            element: <div>Paso 2 - Subida de archivos (en construcción)</div>,
+            element: <FileUploadStep />,
           },
           {
             path: "paso-3",

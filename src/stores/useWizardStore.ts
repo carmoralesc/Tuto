@@ -9,7 +9,8 @@ interface WizardState {
         program: string;
     };
     // Paso 2: Archivos (solo referencia)
-    uploadedFile: File | null;
+    uploadedCardex: File | null;
+    uploadedBoleta: File | null;
     // Paso 3: Materias reprobadas detectadas (mock)
     failedSubjects: string[];
     // Paso 4: Motivos de reprobación
@@ -22,7 +23,8 @@ interface WizardState {
     currentStep: number;
 
     setPersonalData: (data: WizardState['personalData']) => void;
-    setUploadedFile: (file: File | null) => void;
+    setUploadedCardex: (file: File | null) => void;
+    setUploadedBoleta: (file: File | null) => void;
     setFailedSubjects: (subjects: string[]) => void;
     setFailureReason: (subjectCode: string, reason: { category: string; description?: string }) => void;
     setSelectedSubjects: (subjects: string[]) => void;
@@ -39,7 +41,8 @@ const initialState = {
         studentId: '',
         program: '',
     },
-    uploadedFile: null,
+    uploadedCardex: null,
+    uploadedBoleta: null,
     failedSubjects: [],
     failureReasons: {},
     selectedSubjects: [],
@@ -53,7 +56,8 @@ export const useWizardStore = create<WizardState>()(
         (set) => ({
             ...initialState,
             setPersonalData: (data) => set({ personalData: data }),
-            setUploadedFile: (file) => set({ uploadedFile: file }),
+            setUploadedCardex: (file) => set({ uploadedCardex: file }),
+            setUploadedBoleta: (file) => set({ uploadedBoleta: file }),
             setFailedSubjects: (subjects) => set({ failedSubjects: subjects }),
             setFailureReason: (subjectCode, reason) =>
                 set((state) => ({
