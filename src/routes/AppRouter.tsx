@@ -9,6 +9,7 @@ import NotFoundPage from "../pages/NotFoundPage";
 import {
   PersonalDataStep,
   FileUploadStep,
+  FailedSubjectsStep,
 } from "@/features/student-wizard/components";
 
 const router = createBrowserRouter([
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
           },
           {
             path: "paso-3",
-            element: <div>Paso 3 - Materias reprobadas (en construcción)</div>,
+            element: <FailedSubjectsStep />,
           },
           {
             path: "paso-4",
