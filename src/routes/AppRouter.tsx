@@ -11,6 +11,7 @@ import {
   FileUploadStep,
   FailedSubjectsStep,
 } from "@/features/student-wizard/components";
+import { FailureReasonsStep } from "@/features/student-wizard/components/FailureReasonsStep";
 
 const router = createBrowserRouter([
   {
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
           },
           {
             path: "paso-4",
-            element: <div>Paso 4 - Motivos (en construcción)</div>,
+            element: <FailureReasonsStep />,
           },
           {
             path: "paso-5",
