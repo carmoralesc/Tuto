@@ -4,7 +4,7 @@ import { useWizardStore } from "@/stores/useWizardStore";
 import { mockStudents } from "@/mocks/students.mocks";
 import { mockSubjects } from "@/mocks/subjects.mocks";
 import type { AcademicLevel } from "@/types/student.types";
-import { getCategoryFromLevel } from "@/lib/utils/subject-level.utils";
+import { getCategoryFromLevel } from "@/lib/utils";
 
 interface FailedSubjectDetail {
   code: string;

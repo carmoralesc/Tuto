@@ -9,15 +9,30 @@ export interface ValidationViolation {
 }
 
 /**
- * Verifica si un estudiante cumple con los prerequisitos de una materia.
- * Solo considera materias aprobadas (sin importar el nivel en que se aprobaron).
+ * Obtiene un Set con los IDs de materias aprobadas (sin importar el código, usamos subjectId).
+ * Asumimos que el historial guarda subjectCode que corresponde al id del Subject.
+ */
+export function getApprovedIds(student: Student): Set<string> {
+    return new Set(
+        student.academicHistory
+            .filter(attempt => attempt.status === 'aprobado')
+            .map(attempt => attempt.subjectCode)
+    );
+}
+
+/**
+ * Verifica si un estudiante cumple con los prerrequisitos de una materia usando un Set de aprobadas.
+ */
+export function hasPrerequisites(subject: Subject, approved: Set<string>): boolean {
+    return subject.prerequisites.every(prereq => approved.has(prereq));
+}
+
+/**
+ * Versión anterior basada en estudiante, mantenida por compatibilidad (llama a la nueva).
  */
 export function validatePrerequisites(student: Student, subject: Subject): boolean {
-    const approvedCodes = student.academicHistory
-        .filter(attempt => attempt.status === 'aprobado')
-        .map(attempt => attempt.subjectCode);
-
-    return subject.prerequisites.every(prereq => approvedCodes.includes(prereq));
+    const approved = getApprovedIds(student);
+    return hasPrerequisites(subject, approved);
 }
 
 /**
@@ -54,52 +69,40 @@ export function detectViolations(
         });
     }
 
+    const approved = getApprovedIds(student);
+
     // 2. Validación por cada materia seleccionada
     selectedSubjects.forEach(subject => {
         // 2.1 Prerrequisitos
-        if (!validatePrerequisites(student, subject)) {
+        if (!hasPrerequisites(subject, approved)) {
             violations.push({
                 type: 'prerequisite-missing',
-                message: `Falta aprobar prerequisitos para ${subject.name} (${subject.code})`,
-                subjectCode: subject.code,
+                message: `Falta aprobar prerrequisitos para ${subject.name} (${subject.code})`,
+                subjectCode: subject.id,
             });
         }
 
-        // 2.2 Verificar si la materia ya fue aprobada (no debería seleccionarse de nuevo en flujo normal)
-        const approved = student.academicHistory.some(
-            a => a.subjectCode === subject.code && a.status === 'aprobado'
-        );
-        if (approved) {
+        // 2.2 Verificar si ya fue aprobada
+        if (approved.has(subject.id)) {
             violations.push({
                 type: 'subject-unavailable',
                 message: `La materia ${subject.name} ya fue aprobada anteriormente.`,
-                subjectCode: subject.code,
+                subjectCode: subject.id,
             });
         }
 
         // 2.3 Verificar disponibilidad según nivel (baja definitiva)
-        const attemptsForSubject = student.academicHistory.filter(a => a.subjectCode === subject.code);
+        const attemptsForSubject = student.academicHistory.filter(a => a.subjectCode === subject.id);
         const nextLevel = getNextAttemptLevel(attemptsForSubject);
         if (nextLevel === null) {
-            // Puede ser null porque ya está en baja definitiva o porque ya aprobó (ya cubierto arriba)
             const last = attemptsForSubject[attemptsForSubject.length - 1];
             if (last && last.level === 6 && last.status === 'reprobado') {
                 violations.push({
                     type: 'subject-unavailable',
                     message: `La materia ${subject.name} no puede cursarse nuevamente (baja definitiva).`,
-                    subjectCode: subject.code,
+                    subjectCode: subject.id,
                 });
             }
-        }
-
-        // 2.4 Materia especial requiere autorización explícita (se marcará en el wizard)
-        if (subject.isSpecial) {
-            // En esta fase solo advertimos; en el wizard se pedirá confirmación
-            violations.push({
-                type: 'special-requires-authorization',
-                message: `La materia ${subject.name} es especial y requiere autorización del tutor.`,
-                subjectCode: subject.code,
-            });
         }
     });
 

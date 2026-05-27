@@ -4,7 +4,7 @@ export interface Subject {
     name: string;
     credits: number;
     prerequisites: string[];
-    isSpecial: boolean;
-    professor: string;
+    isSpecial?: boolean;
+    professor?: string;
     maxFailuresAllowed?: number;
 }

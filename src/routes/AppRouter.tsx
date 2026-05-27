@@ -12,6 +12,7 @@ import {
   FailedSubjectsStep,
 } from "@/features/student-wizard/components";
 import { FailureReasonsStep } from "@/features/student-wizard/components/FailureReasonsStep";
+import { SubjectSelectionStep } from "@/features/student-wizard/components/SubjectSelectionStep";
 
 const router = createBrowserRouter([
   {
@@ -47,9 +48,7 @@ const router = createBrowserRouter([
           },
           {
             path: "paso-5",
-            element: (
-              <div>Paso 5 - Selección de materias (en construcción)</div>
-            ),
+            element: <SubjectSelectionStep />,
           },
           {
             path: "paso-6",
