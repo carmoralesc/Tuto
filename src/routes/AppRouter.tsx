@@ -13,6 +13,8 @@ import {
 } from "@/features/student-wizard/components";
 import { FailureReasonsStep } from "@/features/student-wizard/components/FailureReasonsStep";
 import { SubjectSelectionStep } from "@/features/student-wizard/components/SubjectSelectionStep";
+import { SignatureStep } from "@/features/student-wizard/components/SignatureStep";
+import { ConfirmationStep } from "@/features/student-wizard/components/ConfirmationStep";
 
 const router = createBrowserRouter([
   {
@@ -52,11 +54,11 @@ const router = createBrowserRouter([
           },
           {
             path: "paso-6",
-            element: <div>Paso 6 - Firma (en construcción)</div>,
+            element: <SignatureStep />,
           },
           {
             path: "paso-7",
-            element: <div>Paso 7 - Confirmación (en construcción)</div>,
+            element: <ConfirmationStep />,
           },
         ],
       },

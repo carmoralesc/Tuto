@@ -61,3 +61,11 @@ export const subjectsArray: Subject[] = [
 export const subjectsMap: Map<string, Subject> = new Map(
     subjectsArray.map(s => [s.id, s])
 );
+
+export const subjectsByCodeMap: Map<string, Subject> = new Map(
+    subjectsArray.map((subject) => [subject.code, subject])
+);
+
+export function getSubjectByKey(key: string) {
+    return subjectsMap.get(key) || subjectsByCodeMap.get(key) || null;
+}
