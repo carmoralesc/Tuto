@@ -12,7 +12,6 @@ export interface AcademicLoadProposal {
 
 export interface SelectedSubject {
     subjectCode: string;
-    isSpecialRequest: boolean; // Si el estudiante solicitó autorización especial
 }
 
 // Para el wizard, podemos tener un tipo extendido que incluya el objeto Subject completo

@@ -14,7 +14,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useWizardStore } from "@/stores/useWizardStore";
-import { mockStudents } from "@/mocks/students.mocks";
+import { mockStudents } from "@/mocks/students.mock";
 import { subjectsArray, subjectsMap } from "@/data/subjects";
 import {
   getApprovedIds,

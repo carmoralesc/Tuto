@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWizardStore } from "@/stores/useWizardStore";
-import { mockStudents } from "@/mocks/students.mocks";
-import { mockSubjects } from "@/mocks/subjects.mocks";
+import { mockStudents } from "@/mocks/students.mock";
+import { mockSubjects } from "@/mocks/subjects.mock";
 import type { AcademicLevel } from "@/types/student.types";
 import { getCategoryFromLevel } from "@/lib/utils";
 

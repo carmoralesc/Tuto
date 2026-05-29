@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWizardStore } from "@/stores/useWizardStore";
-import { mockSubjects } from "@/mocks/subjects.mocks";
+import { mockSubjects } from "@/mocks/subjects.mock";
 
 const REASON_CATEGORIES = [
   { value: "personal", label: "Motivos personales" },

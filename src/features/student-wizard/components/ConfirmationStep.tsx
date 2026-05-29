@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWizardStore } from "@/stores/useWizardStore";
 import { getSubjectByKey } from "@/data/subjects";
-import { mockSubjects } from "@/mocks/subjects.mocks";
+import { mockSubjects } from "@/mocks/subjects.mock";
 
 type SubjectSummary = {
   key: string;

@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Subject } from '@/types/subject.types';
-import { mockStudents } from '@/mocks/students.mocks';
+import { mockStudents } from '@/mocks/students.mock';
 import { subjectsMap } from '@/data/subjects';
 import { getNextAttemptLevel, getCategoryFromLevel } from '@/lib/utils/subject-level.utils';
 
