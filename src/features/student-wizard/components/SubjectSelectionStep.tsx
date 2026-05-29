@@ -15,7 +15,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useWizardStore } from "@/stores/useWizardStore";
 import { mockStudents } from "@/mocks/students.mock";
-import { subjectsArray, subjectsMap } from "@/data/subjects";
+import { subjectsArray, subjectsByCodeMap, subjectsMap } from "@/data/subjects";
 import {
   getApprovedIds,
   hasPrerequisites,
@@ -107,7 +107,7 @@ export function SubjectSelectionStep() {
           (p) => !approvedSet.has(p),
         );
         const names = missing
-          .map((id) => subjectsMap.get(id)?.name || id)
+          .map((code) => subjectsByCodeMap.get(code)?.name || code)
           .join(", ");
         return `Requiere aprobar: ${names}.`;
       }
@@ -256,27 +256,24 @@ export function SubjectSelectionStep() {
         {/* Toast de créditos (absoluto sobre el contenido, no desplaza nada) */}
         <div className="absolute -top-2 right-0 z-20">
           <div
-            className={`rounded-2xl border backdrop-blur shadow-lg px-4 py-3 transition-all duration-300 ease-out overflow-hidden ${
-              isCreditsOutOfRange
+            className={`rounded-2xl border backdrop-blur shadow-lg px-4 py-3 transition-all duration-300 ease-out overflow-hidden ${isCreditsOutOfRange
                 ? "border-red-200 bg-red-50/95"
                 : "border-blue-200 bg-blue-50/95"
-            } w-[22rem]`}
+              } w-[22rem]`}
           >
             <div className="flex items-start justify-between gap-4">
               <div
                 className="min-w-0"
               >
                 <p
-                  className={`text-xs font-semibold uppercase tracking-[0.24em] ${
-                    isCreditsOutOfRange ? "text-red-700" : "text-blue-700"
-                  }`}
+                  className={`text-xs font-semibold uppercase tracking-[0.24em] ${isCreditsOutOfRange ? "text-red-700" : "text-blue-700"
+                    }`}
                 >
                   Resumen de créditos
                 </p>
                 <div
-                  className={`mt-1 flex flex-wrap items-center gap-2 text-sm ${
-                    isCreditsOutOfRange ? "text-red-900" : "text-blue-900"
-                  }`}
+                  className={`mt-1 flex flex-wrap items-center gap-2 text-sm ${isCreditsOutOfRange ? "text-red-900" : "text-blue-900"
+                    }`}
                 >
                   <span>Mín 20</span>
                   <span className={isCreditsOutOfRange ? "text-red-300" : "text-blue-300"}>
@@ -308,22 +305,19 @@ export function SubjectSelectionStep() {
               </div>
 
               <div
-                className={`shrink-0 min-w-[6rem] text-right transition-colors duration-300 ease-out ${
-                  isCreditsOutOfRange ? "text-red-700" : "text-gray-900"
-                }`}
+                className={`shrink-0 min-w-[6rem] text-right transition-colors duration-300 ease-out ${isCreditsOutOfRange ? "text-red-700" : "text-gray-900"
+                  }`}
               >
                 <span
                   key={totalCredits}
-                  className={`block text-3xl font-bold leading-none tabular-nums transition-all duration-200 ease-out ${
-                    creditsPulse ? "scale-105 opacity-90" : "scale-100 opacity-100"
-                  }`}
+                  className={`block text-3xl font-bold leading-none tabular-nums transition-all duration-200 ease-out ${creditsPulse ? "scale-105 opacity-90" : "scale-100 opacity-100"
+                    }`}
                 >
                   {totalCredits}
                 </span>
                 <span
-                  className={`block text-[0.5rem] font-semibold uppercase tracking-[0.24em] ${
-                    isCreditsOutOfRange ? "text-red-700" : "text-blue-700"
-                  }`}
+                  className={`block text-[0.5rem] font-semibold uppercase tracking-[0.24em] ${isCreditsOutOfRange ? "text-red-700" : "text-blue-700"
+                    }`}
                 >
                   créditos
                 </span>

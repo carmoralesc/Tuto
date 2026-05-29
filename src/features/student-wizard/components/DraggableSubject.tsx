@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Subject } from '@/types/subject.types';
 import { mockStudents } from '@/mocks/students.mock';
-import { subjectsMap } from '@/data/subjects';
+import { subjectsByCodeMap } from '@/data/subjects';
 import { getNextAttemptLevel, getCategoryFromLevel } from '@/lib/utils/subject-level.utils';
 
 interface ColorStyle {
@@ -69,17 +69,14 @@ export function DraggableSubject({
           onClick();
         }
       }}
-      className={`p-3 rounded-lg border-2 ${colorStyle.border} ${
-        isDisabled ? 'bg-gray-100' : isSelected ? `${colorStyle.bg} ring-2 ring-inset ring-blue-300` : colorStyle.bg
-      } ${
-        !isDisabled && !isOverlay ? 'hover:shadow-md transition-shadow' : ''
-      }`}
+      className={`p-3 rounded-lg border-2 ${colorStyle.border} ${isDisabled ? 'bg-gray-100' : isSelected ? `${colorStyle.bg} ring-2 ring-inset ring-blue-300` : colorStyle.bg
+        } ${!isDisabled && !isOverlay ? 'hover:shadow-md transition-shadow' : ''
+        }`}
     >
       <div className="flex items-center justify-between">
         <span
-          className={`font-mono text-sm font-medium px-2 py-0.5 rounded ${
-            colorStyle.text
-          } bg-white/60`}
+          className={`font-mono text-sm font-medium px-2 py-0.5 rounded ${colorStyle.text
+            } bg-white/60`}
         >
           {subject.code}
         </span>
@@ -100,16 +97,15 @@ export function DraggableSubject({
         </div>
       </div>
       <p
-        className={`mt-1 text-sm ${
-          isDisabled ? 'text-gray-400' : colorStyle.text
-        } truncate`}
+        className={`mt-1 text-sm ${isDisabled ? 'text-gray-400' : colorStyle.text
+          } truncate`}
       >
         {subject.name}
       </p>
       {subject.prerequisites.length > 0 && (
         <p className="mt-1 text-xs text-gray-500">
           Requiere: {subject.prerequisites
-            .map(id => subjectsMap.get(id)?.name || id)
+            .map(code => subjectsByCodeMap.get(code)?.name || code)
             .join(', ')}
         </p>
       )}

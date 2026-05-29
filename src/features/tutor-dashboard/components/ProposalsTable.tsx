@@ -34,7 +34,12 @@ const riskCategoryFilter: FilterFn<ProposalWithStudent> = (row, columnId, filter
   return row.getValue<string>(columnId) === filterValue;
 };
 
-export function ProposalsTable({ proposals }: { proposals: AcademicLoadProposal[] }) {
+interface ProposalsTableProps {
+  proposals: AcademicLoadProposal[];
+  onSelectProposal: (id: string) => void;
+}
+
+export function ProposalsTable({ proposals, onSelectProposal }: ProposalsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([{ id: 'riskScore', desc: true }]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -102,13 +107,12 @@ export function ProposalsTable({ proposals }: { proposals: AcademicLoadProposal[
           const category = getRiskCategory(score);
           return (
             <span
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${
-                category === 'high'
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${category === 'high'
                   ? 'bg-red-100 text-red-800'
                   : category === 'medium'
                     ? 'bg-yellow-100 text-yellow-800'
                     : 'bg-green-100 text-green-800'
-              }`}
+                }`}
             >
               {score}
             </span>
@@ -127,13 +131,12 @@ export function ProposalsTable({ proposals }: { proposals: AcademicLoadProposal[
           };
 
           return (
-            <span className={`text-xs font-medium ${
-              value === 'high'
+            <span className={`text-xs font-medium ${value === 'high'
                 ? 'text-red-600'
                 : value === 'medium'
                   ? 'text-yellow-700'
                   : 'text-green-700'
-            }`}>
+              }`}>
               {labelMap[value]}
             </span>
           );
@@ -164,15 +167,14 @@ export function ProposalsTable({ proposals }: { proposals: AcademicLoadProposal[
           };
           return (
             <span
-              className={`text-xs font-medium ${
-                status === 'submitted'
+              className={`text-xs font-medium ${status === 'submitted'
                   ? 'text-blue-600'
                   : status === 'approved'
                     ? 'text-green-600'
                     : status === 'rejected'
                       ? 'text-red-600'
                       : 'text-gray-600'
-              }`}
+                }`}
             >
               {statusMap[status] || status}
             </span>
@@ -260,7 +262,7 @@ export function ProposalsTable({ proposals }: { proposals: AcademicLoadProposal[
               <tr
                 key={row.id}
                 className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() => console.log('Ir a detalle de', row.original.id)}
+                onClick={onSelectProposal ? () => onSelectProposal(row.original.id) : undefined}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className="px-4 py-3 text-gray-700">

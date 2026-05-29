@@ -15,6 +15,7 @@ import { FailureReasonsStep } from "@/features/student-wizard/components/Failure
 import { SubjectSelectionStep } from "@/features/student-wizard/components/SubjectSelectionStep";
 import { SignatureStep } from "@/features/student-wizard/components/SignatureStep";
 import { ConfirmationStep } from "@/features/student-wizard/components/ConfirmationStep";
+import { ProposalDetail } from "@/features/tutor-dashboard/components/ProposalDetail";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +28,12 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <TutorDashboardPage />,
+        children: [
+          {
+            index: true,
+            element: <TutorDashboardPage />,
+          },
+        ]
       },
       {
         path: "wizard",
