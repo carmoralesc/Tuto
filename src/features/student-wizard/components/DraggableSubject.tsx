@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Subject } from '@/types/subject.types';
+import type { SubjectAttempt } from '@/types/student.types';
 import { mockStudents } from '@/mocks/students.mock';
 import { subjectsByCodeMap } from '@/data/subjects';
 import { getNextAttemptLevel, getCategoryFromLevel } from '@/lib/utils/subject-level.utils';
@@ -18,6 +19,7 @@ interface DraggableSubjectProps {
   isSelected?: boolean;
   onClick?: () => void;
   colorStyle: ColorStyle;
+  attempts?: SubjectAttempt[]; // NUEVO: intentos del estudiante real
 }
 
 export function DraggableSubject({
@@ -27,10 +29,11 @@ export function DraggableSubject({
   isSelected,
   onClick,
   colorStyle,
+  attempts // Por defecto vacío, pero se recomienda pasar los intentos reales del estudiante
 }: DraggableSubjectProps) {
   const student = mockStudents[0];
-  const attempts = student.academicHistory.filter(a => a.subjectCode === subject.id);
-  const nextLevel = getNextAttemptLevel(attempts);
+  const relevantAttempts = attempts ?? student.academicHistory.filter(a => a.subjectCode === subject.id);
+  const nextLevel = getNextAttemptLevel(relevantAttempts);
   const category = nextLevel ? getCategoryFromLevel(nextLevel) : null;
   const isRepite = category === 'repite';
   const isEspecial = category === 'especial';

@@ -5,7 +5,7 @@ export interface AcademicLoadProposal {
     studentId: string;
     semester: string;        // Ej: "2026A"
     selectedSubjects: SelectedSubject[];
-    status: 'draft' | 'submitted' | 'under-review' | 'approved' | 'rejected';
+    status: 'draft' | 'submitted' | 'reviewed' | 'under-review' | 'approved' | 'rejected';
     submittedAt?: Date;
     tutorNotes?: string;
 }

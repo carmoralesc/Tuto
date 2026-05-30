@@ -108,10 +108,10 @@ export function ProposalsTable({ proposals, onSelectProposal }: ProposalsTablePr
           return (
             <span
               className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${category === 'high'
-                  ? 'bg-red-100 text-red-800'
-                  : category === 'medium'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-green-100 text-green-800'
+                ? 'bg-red-100 text-red-800'
+                : category === 'medium'
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : 'bg-green-100 text-green-800'
                 }`}
             >
               {score}
@@ -132,10 +132,10 @@ export function ProposalsTable({ proposals, onSelectProposal }: ProposalsTablePr
 
           return (
             <span className={`text-xs font-medium ${value === 'high'
-                ? 'text-red-600'
-                : value === 'medium'
-                  ? 'text-yellow-700'
-                  : 'text-green-700'
+              ? 'text-red-600'
+              : value === 'medium'
+                ? 'text-yellow-700'
+                : 'text-green-700'
               }`}>
               {labelMap[value]}
             </span>
@@ -162,18 +162,19 @@ export function ProposalsTable({ proposals, onSelectProposal }: ProposalsTablePr
             draft: 'Borrador',
             submitted: 'Enviada',
             'under-review': 'En revisión',
+            reviewed: 'Revisada',
             approved: 'Aprobada',
             rejected: 'Rechazada',
           };
           return (
             <span
               className={`text-xs font-medium ${status === 'submitted'
-                  ? 'text-blue-600'
-                  : status === 'approved'
-                    ? 'text-green-600'
-                    : status === 'rejected'
-                      ? 'text-red-600'
-                      : 'text-gray-600'
+                ? 'text-blue-600'
+                : status === 'approved'
+                  ? 'text-green-600'
+                  : status === 'rejected'
+                    ? 'text-red-600'
+                    : 'text-gray-600'
                 }`}
             >
               {statusMap[status] || status}

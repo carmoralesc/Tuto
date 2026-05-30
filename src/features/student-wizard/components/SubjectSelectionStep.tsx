@@ -40,10 +40,13 @@ const palette = [
 ];
 
 export function SubjectSelectionStep() {
-  const { selectedSubjects, setSelectedSubjects, setCurrentStep } =
+  const { personalData, selectedSubjects, setSelectedSubjects, setCurrentStep } =
     useWizardStore();
   const navigate = useNavigate();
-  const student = mockStudents[0];
+  const student = useMemo(
+    () => mockStudents.find((s) => s.id === personalData.studentId) ?? mockStudents[0],
+    [personalData.studentId],
+  );
   const allSubjects = subjectsArray;
   const { toasts, addToast, removeToast } = useToast();
 
@@ -91,7 +94,7 @@ export function SubjectSelectionStep() {
   const especialCount = useMemo(() => {
     return selected.filter((s) => {
       const attempts = student.academicHistory.filter(
-        (a) => a.subjectCode === s.id,
+        (a) => a.subjectCode === s.code,
       );
       const nextLevel = getNextAttemptLevel(attempts);
       return nextLevel === 5 || nextLevel === 6;
@@ -100,7 +103,7 @@ export function SubjectSelectionStep() {
 
   const getBlockReason = useCallback(
     (subject: Subject): string | null => {
-      if (approvedSet.has(subject.id)) return `Ya aprobaste ${subject.name}.`;
+      if (approvedSet.has(subject.code)) return `Ya aprobaste ${subject.name}.`;
       if (selectedIds.has(subject.id)) return "Ya está en tu selección.";
       if (!hasPrerequisites(subject, approvedSet)) {
         const missing = subject.prerequisites.filter(
@@ -118,21 +121,41 @@ export function SubjectSelectionStep() {
 
   const canAddSubject = useCallback(
     (subject: Subject) => {
-      if (getBlockReason(subject) !== null) return false;
+      const blockReason = getBlockReason(subject);
       const attempts = student.academicHistory.filter(
-        (a) => a.subjectCode === subject.id,
+        (a) => a.subjectCode === subject.code,
       );
       const nextLevel = getNextAttemptLevel(attempts);
       const isCursoEspecial = nextLevel === 5 || nextLevel === 6;
+      const hasNormalSubjects = selected.some((s) => {
+        const selectedAttempts = student.academicHistory.filter(
+          (a) => a.subjectCode === s.code,
+        );
+        const selectedNextLevel = getNextAttemptLevel(selectedAttempts);
+        return selectedNextLevel !== 5 && selectedNextLevel !== 6;
+      });
+
+      const potentialCredits = calculateTotalCredits([...selected, subject]);
+      if (blockReason) return false;
       if (especialCount >= 2) return false;
+
       if (especialCount === 1) {
-        if (isCursoEspecial) return true;
-        const potentialCredits = calculateTotalCredits([...selected, subject]);
+        if (isCursoEspecial && hasNormalSubjects) return false;
         return potentialCredits <= 20;
       }
-      return true;
+
+      const canAdd = potentialCredits <= 36;
+      console.log('[SubjectSelectionStep] canAddSubject', {
+        especialCount,
+        isCursoEspecial,
+        hasNormalSubjects,
+        potentialCredits,
+        canAdd,
+      });
+
+      return canAdd;
     },
-    [selected, student, especialCount, getBlockReason],
+    [getBlockReason, student, especialCount, selected],
   );
 
   const totalCredits = useMemo(
@@ -141,8 +164,10 @@ export function SubjectSelectionStep() {
   );
 
   const creditRange = useMemo(() => {
-    const maxCredits = especialCount > 0 ? 20 : 36;
-    return { minCredits: 20, maxCredits };
+    if (especialCount > 0) {
+      return { minCredits: 0, maxCredits: 20 };
+    }
+    return { minCredits: 20, maxCredits: 36 };
   }, [especialCount]);
 
   const isCreditsOutOfRange =
@@ -217,12 +242,11 @@ export function SubjectSelectionStep() {
 
   const canSubmit = useMemo(() => {
     const total = totalCredits;
-    const selectedCount = selected.length;
     if (especialCount === 2) {
-      return selectedCount === 2;
+      return selected.length === 2;
     }
     if (especialCount === 1) {
-      return total >= 20 && total <= 20;
+      return total <= 20;
     }
     return total >= 20 && total <= 36;
   }, [especialCount, totalCredits, selected.length]);
@@ -257,8 +281,8 @@ export function SubjectSelectionStep() {
         <div className="absolute -top-2 right-0 z-20">
           <div
             className={`rounded-2xl border backdrop-blur shadow-lg px-4 py-3 transition-all duration-300 ease-out overflow-hidden ${isCreditsOutOfRange
-                ? "border-red-200 bg-red-50/95"
-                : "border-blue-200 bg-blue-50/95"
+              ? "border-red-200 bg-red-50/95"
+              : "border-blue-200 bg-blue-50/95"
               } w-[22rem]`}
           >
             <div className="flex items-start justify-between gap-4">
@@ -275,10 +299,12 @@ export function SubjectSelectionStep() {
                   className={`mt-1 flex flex-wrap items-center gap-2 text-sm ${isCreditsOutOfRange ? "text-red-900" : "text-blue-900"
                     }`}
                 >
-                  <span>Mín 20</span>
-                  <span className={isCreditsOutOfRange ? "text-red-300" : "text-blue-300"}>
-                    •
-                  </span>
+                  {creditRange.minCredits > 0 && <span>Mín {creditRange.minCredits}</span>}
+                  {creditRange.minCredits > 0 && (
+                    <span className={isCreditsOutOfRange ? "text-red-300" : "text-blue-300"}>
+                      •
+                    </span>
+                  )}
                   <span>{especialCount > 0 ? "Máx 20" : "Máx 36"}</span>
                   {especialCount > 0 && (
                     <>
