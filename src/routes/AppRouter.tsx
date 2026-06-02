@@ -4,23 +4,32 @@ import {
   Navigate,
 } from "react-router-dom";
 import App from "../App";
-import TutorDashboardPage from "../pages/TutorDashboardPage";
-import NotFoundPage from "../pages/NotFoundPage";
+import LoginPage from "@/pages/LoginPage";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import {
   PersonalDataStep,
   FileUploadStep,
   FailedSubjectsStep,
+  FailureReasonsStep,
+  SubjectSelectionStep,
+  SignatureStep,
+  ConfirmationStep,
 } from "@/features/student-wizard/components";
-import { FailureReasonsStep } from "@/features/student-wizard/components/FailureReasonsStep";
-import { SubjectSelectionStep } from "@/features/student-wizard/components/SubjectSelectionStep";
-import { SignatureStep } from "@/features/student-wizard/components/SignatureStep";
-import { ConfirmationStep } from "@/features/student-wizard/components/ConfirmationStep";
-import { ProposalDetail } from "@/features/tutor-dashboard/components/ProposalDetail";
+import TutorDashboardPage from "../pages/TutorDashboardPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
     path: "/",
-    element: <App />,
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
@@ -28,12 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        children: [
-          {
-            index: true,
-            element: <TutorDashboardPage />,
-          },
-        ]
+        element: (
+          <ProtectedRoute>
+            <TutorDashboardPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "wizard",

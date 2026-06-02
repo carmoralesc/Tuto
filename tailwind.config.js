@@ -19,11 +19,16 @@ export default {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(1.08)' },
         },
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
       },
       animation: {
         'confirmation-fade-in': 'confirmation-fade-in 180ms ease-out',
         'confirmation-pop': 'confirmation-pop 260ms cubic-bezier(0.16, 1, 0.3, 1)',
         'confirmation-pulse': 'confirmation-pulse 1.4s ease-in-out infinite',
+        fadeIn: 'fadeIn 300ms ease-out',
       },
     },
   },
