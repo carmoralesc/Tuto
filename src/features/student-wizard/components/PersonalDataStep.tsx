@@ -9,7 +9,7 @@ import { mockStudents } from "@/mocks/students.mock";
 import { personalDataSchema } from "@/features/schemas/personalData.schema";
 
 export function PersonalDataStep() {
-  const { personalData, setPersonalData, setCurrentStep } = useWizardStore();
+  const { personalData, setPersonalData, setCurrentStep, markStepCompleted } = useWizardStore();
   const { user } = useAuthStore();
   const navigate = useNavigate();
 
@@ -98,6 +98,7 @@ export function PersonalDataStep() {
     // Transformar datos del formulario a modelo de almacenamiento
     const transformed = personalDataSchema.parse(data);
     setPersonalData(transformed);
+    markStepCompleted(1);
     setCurrentStep(2);
     navigate("/wizard/paso-2");
   };

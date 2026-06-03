@@ -5,3 +5,4 @@ export { FailureReasonsStep } from "./FailureReasonsStep";
 export { SubjectSelectionStep } from "./SubjectSelectionStep";
 export { SignatureStep } from "./SignatureStep";
 export { ConfirmationStep } from "./ConfirmationStep";
+export { ProtectedStep } from "./ProtectedStep";

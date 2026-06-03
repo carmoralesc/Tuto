@@ -102,7 +102,7 @@ export default function LoginPage() {
                                     Tecnológico Nacional de México
                                 </p>
                                 <h1 className="text-5xl font-black tracking-tight text-gray-950 sm:text-6xl">
-                                    TuTec
+                                    TutorTec
                                 </h1>
                             </div>
                             <p className="max-w-2xl text-lg leading-8 text-gray-600">

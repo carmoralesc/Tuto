@@ -21,6 +21,7 @@ interface WizardState {
     signature: string;
     // Paso actual (1-7)
     currentStep: number;
+    completedSteps: number[];
 
     setPersonalData: (data: WizardState['personalData']) => void;
     setUploadedCardex: (file: File | null) => void;
@@ -30,6 +31,7 @@ interface WizardState {
     setSelectedSubjects: (subjects: string[]) => void;
     setSignature: (signature: string) => void;
     setCurrentStep: (step: number) => void;
+    markStepCompleted: (step: number) => void;
     resetWizard: () => void;
 }
 
@@ -48,6 +50,7 @@ const initialState = {
     selectedSubjects: [],
     signature: '',
     currentStep: 1,
+    completedSteps: [],
 };
 
 // 3. Crear store con persistencia en localStorage (opcional pero útil)
@@ -66,6 +69,10 @@ export const useWizardStore = create<WizardState>()(
             setSelectedSubjects: (subjects) => set({ selectedSubjects: subjects }),
             setSignature: (signature) => set({ signature }),
             setCurrentStep: (step) => set({ currentStep: step }),
+            markStepCompleted: (step) =>
+                set((state) => ({
+                    completedSteps: Array.from(new Set([...state.completedSteps, step])).sort((a, b) => a - b),
+                })),
             resetWizard: () => set(initialState),
         }),
         { name: 'wizard-storage' }

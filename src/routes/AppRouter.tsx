@@ -14,6 +14,7 @@ import {
   SubjectSelectionStep,
   SignatureStep,
   ConfirmationStep,
+  ProtectedStep,
 } from "@/features/student-wizard/components";
 import TutorDashboardPage from "../pages/TutorDashboardPage";
 import NotFoundPage from "../pages/NotFoundPage";
@@ -49,31 +50,59 @@ const router = createBrowserRouter([
         children: [
           {
             path: "paso-1",
-            element: <PersonalDataStep />,
+            element: (
+              <ProtectedStep stepNumber={1}>
+                <PersonalDataStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-2",
-            element: <FileUploadStep />,
+            element: (
+              <ProtectedStep stepNumber={2}>
+                <FileUploadStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-3",
-            element: <FailedSubjectsStep />,
+            element: (
+              <ProtectedStep stepNumber={3}>
+                <FailedSubjectsStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-4",
-            element: <FailureReasonsStep />,
+            element: (
+              <ProtectedStep stepNumber={4}>
+                <FailureReasonsStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-5",
-            element: <SubjectSelectionStep />,
+            element: (
+              <ProtectedStep stepNumber={5}>
+                <SubjectSelectionStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-6",
-            element: <SignatureStep />,
+            element: (
+              <ProtectedStep stepNumber={6}>
+                <SignatureStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-7",
-            element: <ConfirmationStep />,
+            element: (
+              <ProtectedStep stepNumber={7}>
+                <ConfirmationStep />
+              </ProtectedStep>
+            ),
           },
         ],
       },

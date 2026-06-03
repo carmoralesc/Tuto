@@ -23,7 +23,7 @@ const isReasonCategory = (value: string): value is ReasonCategory => {
 };
 
 export function FailureReasonsStep() {
-  const { failedSubjects, failureReasons, setFailureReason, setCurrentStep } =
+  const { failedSubjects, failureReasons, setFailureReason, setCurrentStep, markStepCompleted } =
     useWizardStore();
   const navigate = useNavigate();
 
@@ -93,6 +93,7 @@ export function FailureReasonsStep() {
     failedSubjects.forEach((code) => {
       setFailureReason(code, reasons[code]);
     });
+    markStepCompleted(4);
     setCurrentStep(5);
     navigate("/wizard/paso-5");
   };
@@ -112,6 +113,7 @@ export function FailureReasonsStep() {
         </p>
         <button
           onClick={() => {
+            markStepCompleted(4);
             setCurrentStep(5);
             navigate("/wizard/paso-5");
           }}

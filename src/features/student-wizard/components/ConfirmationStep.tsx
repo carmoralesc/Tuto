@@ -22,6 +22,7 @@ export function ConfirmationStep() {
     selectedSubjects,
     signature,
     setCurrentStep,
+    markStepCompleted,
     resetWizard,
   } = useWizardStore();
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ export function ConfirmationStep() {
   // Paso 2: el usuario confirma → mostrar éxito
   const handleConfirm = () => {
     // Aquí iría el envío real al backend
+    markStepCompleted(7);
     setModalState('success');
   };
 

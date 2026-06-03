@@ -40,7 +40,7 @@ const palette = [
 ];
 
 export function SubjectSelectionStep() {
-  const { personalData, selectedSubjects, setSelectedSubjects, setCurrentStep } =
+  const { personalData, selectedSubjects, setSelectedSubjects, setCurrentStep, markStepCompleted } =
     useWizardStore();
   const navigate = useNavigate();
   const student = useMemo(
@@ -261,6 +261,7 @@ export function SubjectSelectionStep() {
   const confirmNext = () => {
     setShowConfirmModal(false);
     setSelectedSubjects(selected.map((s) => s.code));
+    markStepCompleted(5);
     setCurrentStep(6);
     navigate("/wizard/paso-6");
   };
