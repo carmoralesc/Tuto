@@ -11,12 +11,26 @@ export interface User {
     token: string; // simulado
 }
 
+export interface UserProfile {
+    career: string;
+    address: string;
+    city: string;
+    state: string;
+    phone: string;
+    alternateEmail: string;
+    tutorName: string;
+    tutorPhone: string;
+}
+
 interface AuthState {
     user: User | null;
+    profile: UserProfile | null;
     isAuthenticated: boolean;
     selectedRole: UserRole | null;
     setSelectedRole: (role: UserRole) => void;
     login: (username: string, password: string) => Promise<boolean>;
+    updateProfile: (profile: UserProfile) => void;
+    changePassword: (currentPassword: string, newPassword: string) => { success: boolean; message: string };
     logout: () => void;
 }
 
@@ -64,10 +78,69 @@ const MOCK_USERS: Record<string, { password: string; user: User }> = {
     },
 };
 
+const MOCK_PROFILES: Record<string, UserProfile> = {
+    A00123456: {
+        career: 'Ingeniería en Sistemas Computacionales',
+        address: 'Calle Reforma 123, Col. Centro',
+        city: 'Orizaba, Veracruz',
+        state: 'Veracruz',
+        phone: '2721234567',
+        alternateEmail: 'maria.gonzalez.alt@example.com',
+        tutorName: 'Dr. Tutor Principal',
+        tutorPhone: '2727654321',
+    },
+    A00123457: {
+        career: 'Ingeniería en Sistemas Computacionales',
+        address: 'Av. Cri-Cri 45, Col. El Espinal',
+        city: 'Orizaba, Veracruz',
+        state: 'Veracruz',
+        phone: '2722345678',
+        alternateEmail: 'luis.hernandez.alt@example.com',
+        tutorName: 'Mtra. Laura Sánchez',
+        tutorPhone: '2726543210',
+    },
+    admin: {
+        career: 'Coordinación Académica',
+        address: 'Edificio Administrativo, Planta Alta',
+        city: 'Orizaba, Veracruz',
+        state: 'Veracruz',
+        phone: '2721112233',
+        alternateEmail: 'admin.alt@example.com',
+        tutorName: 'N/A',
+        tutorPhone: 'N/A',
+    },
+    tutor1: {
+        career: 'Tutoría Académica',
+        address: 'Edificio de Tutorías, Cubículo 4',
+        city: 'Orizaba, Veracruz',
+        state: 'Veracruz',
+        phone: '2722223344',
+        alternateEmail: 'laura.sanchez.alt@example.com',
+        tutorName: 'N/A',
+        tutorPhone: 'N/A',
+    },
+};
+
+function getDefaultProfile(username: string): UserProfile {
+    return (
+        MOCK_PROFILES[username] ?? {
+            career: '',
+            address: '',
+            city: '',
+            state: '',
+            phone: '',
+            alternateEmail: '',
+            tutorName: '',
+            tutorPhone: '',
+        }
+    );
+}
+
 export const useAuthStore = create<AuthState>()(
     persist(
         (set, get) => ({
             user: null,
+            profile: null,
             isAuthenticated: false,
             selectedRole: null,
             setSelectedRole: (role) => set({ selectedRole: role }),
@@ -75,7 +148,11 @@ export const useAuthStore = create<AuthState>()(
                 const mockUser = MOCK_USERS[username];
                 if (mockUser && mockUser.password === password) {
                     if (mockUser.user.role === get().selectedRole) {
-                        set({ user: mockUser.user, isAuthenticated: true });
+                        set({
+                            user: mockUser.user,
+                            profile: getDefaultProfile(mockUser.user.username),
+                            isAuthenticated: true,
+                        });
                         return true;
                     } else {
                         return false; // rol no coincide
@@ -83,11 +160,36 @@ export const useAuthStore = create<AuthState>()(
                 }
                 return false;
             },
-            logout: () => set({ user: null, isAuthenticated: false, selectedRole: null }),
+            updateProfile: (profile) => {
+                const currentUser = get().user;
+                if (!currentUser) return;
+
+                MOCK_PROFILES[currentUser.username] = profile;
+                set({ profile });
+            },
+            changePassword: (currentPassword: string, newPassword: string) => {
+                const currentUser = get().user;
+                if (!currentUser) {
+                    return { success: false, message: 'No hay sesión activa.' };
+                }
+
+                const account = MOCK_USERS[currentUser.username];
+                if (!account) {
+                    return { success: false, message: 'No se encontró la cuenta de usuario.' };
+                }
+
+                if (account.password !== currentPassword) {
+                    return { success: false, message: 'La contraseña actual es incorrecta.' };
+                }
+
+                account.password = newPassword;
+                return { success: true, message: 'Contraseña actualizada correctamente.' };
+            },
+            logout: () => set({ user: null, profile: null, isAuthenticated: false, selectedRole: null }),
         }),
         {
             name: 'auth-storage',
-            partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
+            partialize: (state) => ({ user: state.user, profile: state.profile, isAuthenticated: state.isAuthenticated }),
         }
     )
 );

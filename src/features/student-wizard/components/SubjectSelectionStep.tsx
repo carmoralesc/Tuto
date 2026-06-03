@@ -44,7 +44,10 @@ export function SubjectSelectionStep() {
     useWizardStore();
   const navigate = useNavigate();
   const student = useMemo(
-    () => mockStudents.find((s) => s.id === personalData.studentId) ?? mockStudents[0],
+    () =>
+      mockStudents.find(
+        (s) => s.id === personalData.studentId || s.studentId === personalData.studentId,
+      ) ?? mockStudents[0],
     [personalData.studentId],
   );
   const allSubjects = subjectsArray;

@@ -17,6 +17,7 @@ import {
 } from "@/features/student-wizard/components";
 import TutorDashboardPage from "../pages/TutorDashboardPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import ProfilePage from "../pages/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,14 @@ const router = createBrowserRouter([
             element: <ConfirmationStep />,
           },
         ],
+      },
+      {
+        path: "perfil",
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "*",
