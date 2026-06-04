@@ -26,7 +26,6 @@ export default function ProfilePage() {
     const { user, profile, updateProfile, changePassword } = useAuthStore();
     const { allTrackingData, saveTrackingData } = useStudentTrackingStore();
     const isStudent = user?.role === "student";
-    const isTutor = user?.role === "tutor";
 
     const [profileForm, setProfileForm] = useState<UserProfile>(profile ?? emptyProfile);
     const [profileMessage, setProfileMessage] = useState<string | null>(null);
