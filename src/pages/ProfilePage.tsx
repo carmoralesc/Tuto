@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "
 import { createPortal } from "react-dom";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { useAuthStore, type UserProfile } from "@/stores/useAuthStore";
+import { useStudentTrackingStore } from "@/stores/useStudentTrackingStore";
 
 function getInitials(name: string): string {
     const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -23,11 +24,18 @@ const emptyProfile: UserProfile = {
 
 export default function ProfilePage() {
     const { user, profile, updateProfile, changePassword } = useAuthStore();
+    const { allTrackingData, saveTrackingData } = useStudentTrackingStore();
     const isStudent = user?.role === "student";
     const isTutor = user?.role === "tutor";
 
     const [profileForm, setProfileForm] = useState<UserProfile>(profile ?? emptyProfile);
     const [profileMessage, setProfileMessage] = useState<string | null>(null);
+
+    // Tracking data for students (PB / PEA)
+    const trackingEntry = allTrackingData.find((d) => d.studentId === user?.username);
+    const [pb, setPb] = useState<number>(trackingEntry?.promedioBachillerato ?? 0);
+    const [pea, setPea] = useState<number>(trackingEntry?.promedioExamenAdmision ?? 0);
+    const [trackingMessage, setTrackingMessage] = useState<string | null>(null);
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -67,6 +75,17 @@ export default function ProfilePage() {
         setChangeRequestMessage(
             "Solicitud enviada: un administrador revisará los cambios en los datos no editables.",
         );
+    };
+
+    const handleSaveTracking = () => {
+        if (!trackingEntry || !user) return;
+        saveTrackingData({
+            ...trackingEntry,
+            promedioBachillerato: pb,
+            promedioExamenAdmision: pea,
+        });
+        setTrackingMessage("Promedios actualizados correctamente.");
+        setTimeout(() => setTrackingMessage(null), 3000);
     };
 
     const handlePasswordSubmit = (e: FormEvent) => {
@@ -133,6 +152,46 @@ export default function ProfilePage() {
                                 className="mt-1 block w-full cursor-not-allowed rounded-xl border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-700 shadow-sm"
                             />
                         </div>
+                    )}
+                    {isStudent && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Promedio Bachillerato (P.B.)</label>
+                                <input
+                                    type="number"
+                                    step="0.1"
+                                    min={0}
+                                    max={10}
+                                    value={pb}
+                                    onChange={(e) => setPb(Number(e.target.value))}
+                                    className="mt-1 block w-full rounded-xl border border-gray-300 px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Promedio Examen Admisión (P.E.A.)</label>
+                                <input
+                                    type="number"
+                                    step="0.1"
+                                    min={0}
+                                    max={100}
+                                    value={pea}
+                                    onChange={(e) => setPea(Number(e.target.value))}
+                                    className="mt-1 block w-full rounded-xl border border-gray-300 px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
+                                />
+                            </div>
+                            <div className="sm:col-span-2">
+                                <button
+                                    type="button"
+                                    onClick={handleSaveTracking}
+                                    className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition"
+                                >
+                                    Guardar promedios
+                                </button>
+                                {trackingMessage && (
+                                    <span className="ml-3 text-sm text-green-600">{trackingMessage}</span>
+                                )}
+                            </div>
+                        </>
                     )}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Nombre completo</label>
