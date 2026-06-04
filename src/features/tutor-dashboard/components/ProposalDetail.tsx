@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { mockStudents } from '@/mocks/students.mock';
 import { subjectsByCodeMap } from '@/data/subjects';
@@ -30,6 +31,7 @@ function getCreditDeltaColor(currentInRange: boolean, previousInRange: boolean):
 }
 
 export function ProposalDetail({ proposal, previousProposal, onModify, onApprove, onBack }: ProposalDetailProps) {
+  const navigate = useNavigate();
   const [showApproveModal, setShowApproveModal] = useState(false);
 
   const prop = proposal || undefined;
@@ -252,13 +254,23 @@ export function ProposalDetail({ proposal, previousProposal, onModify, onApprove
       {/* Barra de acciones flotante */}
       <div className="fixed inset-x-0 bottom-4 z-30 px-4 sm:px-6 pointer-events-none">
         <div className="mx-auto max-w-4xl rounded-2xl bg-white/95 backdrop-blur border border-gray-200 shadow-lg p-3 pointer-events-auto">
-          <div className="flex justify-between gap-3">
-            <button
-              onClick={onBack}
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-            >
-              ← Volver a la lista
-            </button>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={onBack}
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                ← Volver a la lista
+              </button>
+              {student && (
+                <button
+                  onClick={() => navigate(`/tutor/seguimiento/${student.studentId}`)}
+                  className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700"
+                >
+                  Ver seguimiento
+                </button>
+              )}
+            </div>
             {prop.status !== 'approved' && (
               <div className="flex gap-3">
                 <button

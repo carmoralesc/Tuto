@@ -23,7 +23,7 @@ export function AppHeader() {
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
 
-    const homePath = user?.role === "tutor" ? "/dashboard" : "/wizard/paso-1";
+    const homePath = user?.role === "tutor" ? "/dashboard" : "/inicio";
 
     const initials = useMemo(() => {
         if (!user?.name) return "U";
@@ -75,13 +75,35 @@ export function AppHeader() {
         <>
             <header className="bg-white shadow-sm">
                 <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-2 sm:px-6">
-                    <Link
-                        to={homePath}
-                        className="inline-flex items-center gap-2 rounded-xl px-2 py-1.5 text-gray-900 transition hover:bg-gray-100"
-                    >
-                        <AcademicCapIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
-                        <span className="text-lg font-bold tracking-tight sm:text-xl">TutorTec</span>
-                    </Link>
+                    <div className="flex items-center gap-2">
+                        <Link
+                            to={homePath}
+                            className="inline-flex items-center gap-2 rounded-xl px-2 py-1.5 text-gray-900 transition hover:bg-gray-100"
+                        >
+                            <AcademicCapIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
+                            <span className="text-lg font-bold tracking-tight sm:text-xl">TutorTec</span>
+                        </Link>
+
+                        {/* Navigation links */}
+                        <nav className="hidden sm:flex items-center gap-1 ml-4">
+                            {user?.role === "tutor" && (
+                                <>
+                                    <Link
+                                        to="/dashboard"
+                                        className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition"
+                                    >
+                                        Dashboard
+                                    </Link>
+                                    <Link
+                                        to="/tutor/seguimiento"
+                                        className="rounded-lg px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 transition"
+                                    >
+                                        Seguimiento
+                                    </Link>
+                                </>
+                            )}
+                        </nav>
+                    </div>
 
                     <div className="relative" ref={menuRef}>
                         <button
@@ -103,8 +125,8 @@ export function AppHeader() {
 
                         <div
                             className={`absolute right-0 z-40 mt-2 w-52 origin-top-right rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg transition-all duration-150 ${isMenuOpen
-                                    ? "pointer-events-auto scale-100 opacity-100"
-                                    : "pointer-events-none scale-95 opacity-0"
+                                ? "pointer-events-auto scale-100 opacity-100"
+                                : "pointer-events-none scale-95 opacity-0"
                                 }`}
                             role="menu"
                             aria-hidden={!isMenuOpen}

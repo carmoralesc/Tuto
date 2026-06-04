@@ -19,6 +19,22 @@ import {
 import TutorDashboardPage from "../pages/TutorDashboardPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import ProfilePage from "../pages/ProfilePage";
+import StudentDashboard from "../pages/StudentDashboard";
+import StudentTrackingPage from "../pages/StudentTrackingPage";
+import TutorTrackingListPage from "../pages/TutorTrackingListPage";
+import TutorTrackingPage from "../pages/TutorTrackingPage";
+import { useAuthStore } from "@/stores/useAuthStore";
+
+function RoleIndexRedirect() {
+  const user = useAuthStore((s) => s.user);
+  if (user?.role === "tutor") {
+    return <Navigate to="/dashboard" replace />;
+  }
+  if (user?.role === "student") {
+    return <Navigate to="/inicio" replace />;
+  }
+  return <Navigate to="/login" replace />;
+}
 
 const router = createBrowserRouter([
   {
@@ -35,7 +51,15 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/wizard/paso-1" replace />,
+        element: <RoleIndexRedirect />,
+      },
+      {
+        path: "inicio",
+        element: (
+          <ProtectedRoute>
+            <StudentDashboard />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "dashboard",
@@ -105,6 +129,30 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: "estudiante/seguimiento",
+        element: (
+          <ProtectedRoute>
+            <StudentTrackingPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "tutor/seguimiento",
+        element: (
+          <ProtectedRoute>
+            <TutorTrackingListPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "tutor/seguimiento/:studentId",
+        element: (
+          <ProtectedRoute>
+            <TutorTrackingPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "perfil",
