@@ -69,7 +69,7 @@ src/
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <url-del-repo>
+git clone https://github.com/carmoralesc/Tuto.git
 cd tuto-app
 ```
 
@@ -203,7 +203,7 @@ src/
 ## 🛠️ Installation & Usage
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/carmoralesc/Tuto.git
 cd tuto-app
 npm install
 npm run dev
