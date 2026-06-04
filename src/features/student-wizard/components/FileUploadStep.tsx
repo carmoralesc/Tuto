@@ -14,6 +14,7 @@ export function FileUploadStep() {
     setUploadedCardex,
     setUploadedBoleta,
     setCurrentStep,
+    markStepCompleted,
   } = useWizardStore();
   const navigate = useNavigate();
 
@@ -95,6 +96,8 @@ export function FileUploadStep() {
   };
 
   const handleNext = () => {
+    if (!bothFilesUploaded || isUploading) return;
+    markStepCompleted(2);
     setCurrentStep(3);
     navigate("/wizard/paso-3");
   };
@@ -210,11 +213,10 @@ function UploadSection({
 
       {!uploadedFile ? (
         <div
-          className={`relative rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
-            dragActive
+          className={`relative rounded-lg border-2 border-dashed p-6 text-center transition-colors ${dragActive
               ? "border-blue-500 bg-blue-50"
               : "border-gray-300 hover:border-gray-400"
-          } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+            } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
           onDragEnter={(e) => onDrag(e, true)}
           onDragLeave={(e) => onDrag(e, false)}
           onDragOver={(e) => onDrag(e, true)}

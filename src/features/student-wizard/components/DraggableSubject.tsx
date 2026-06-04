@@ -1,8 +1,9 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Subject } from '@/types/subject.types';
-import { mockStudents } from '@/mocks/students.mocks';
-import { subjectsMap } from '@/data/subjects';
+import type { SubjectAttempt } from '@/types/student.types';
+import { mockStudents } from '@/mocks/students.mock';
+import { subjectsByCodeMap } from '@/data/subjects';
 import { getNextAttemptLevel, getCategoryFromLevel } from '@/lib/utils/subject-level.utils';
 
 interface ColorStyle {
@@ -18,6 +19,7 @@ interface DraggableSubjectProps {
   isSelected?: boolean;
   onClick?: () => void;
   colorStyle: ColorStyle;
+  attempts?: SubjectAttempt[]; // NUEVO: intentos del estudiante real
 }
 
 export function DraggableSubject({
@@ -27,10 +29,11 @@ export function DraggableSubject({
   isSelected,
   onClick,
   colorStyle,
+  attempts // Por defecto vacío, pero se recomienda pasar los intentos reales del estudiante
 }: DraggableSubjectProps) {
   const student = mockStudents[0];
-  const attempts = student.academicHistory.filter(a => a.subjectCode === subject.id);
-  const nextLevel = getNextAttemptLevel(attempts);
+  const relevantAttempts = attempts ?? student.academicHistory.filter(a => a.subjectCode === subject.id);
+  const nextLevel = getNextAttemptLevel(relevantAttempts);
   const category = nextLevel ? getCategoryFromLevel(nextLevel) : null;
   const isRepite = category === 'repite';
   const isEspecial = category === 'especial';
@@ -69,17 +72,14 @@ export function DraggableSubject({
           onClick();
         }
       }}
-      className={`p-3 rounded-lg border-2 ${colorStyle.border} ${
-        isDisabled ? 'bg-gray-100' : isSelected ? `${colorStyle.bg} ring-2 ring-inset ring-blue-300` : colorStyle.bg
-      } ${
-        !isDisabled && !isOverlay ? 'hover:shadow-md transition-shadow' : ''
-      }`}
+      className={`p-3 rounded-lg border-2 ${colorStyle.border} ${isDisabled ? 'bg-gray-100' : isSelected ? `${colorStyle.bg} ring-2 ring-inset ring-blue-300` : colorStyle.bg
+        } ${!isDisabled && !isOverlay ? 'hover:shadow-md transition-shadow' : ''
+        }`}
     >
       <div className="flex items-center justify-between">
         <span
-          className={`font-mono text-sm font-medium px-2 py-0.5 rounded ${
-            colorStyle.text
-          } bg-white/60`}
+          className={`font-mono text-sm font-medium px-2 py-0.5 rounded ${colorStyle.text
+            } bg-white/60`}
         >
           {subject.code}
         </span>
@@ -100,16 +100,15 @@ export function DraggableSubject({
         </div>
       </div>
       <p
-        className={`mt-1 text-sm ${
-          isDisabled ? 'text-gray-400' : colorStyle.text
-        } truncate`}
+        className={`mt-1 text-sm ${isDisabled ? 'text-gray-400' : colorStyle.text
+          } truncate`}
       >
         {subject.name}
       </p>
       {subject.prerequisites.length > 0 && (
         <p className="mt-1 text-xs text-gray-500">
           Requiere: {subject.prerequisites
-            .map(id => subjectsMap.get(id)?.name || id)
+            .map(code => subjectsByCodeMap.get(code)?.name || code)
             .join(', ')}
         </p>
       )}

@@ -14,8 +14,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useWizardStore } from "@/stores/useWizardStore";
-import { mockStudents } from "@/mocks/students.mocks";
-import { subjectsArray, subjectsMap } from "@/data/subjects";
+import { mockStudents } from "@/mocks/students.mock";
+import { subjectsArray, subjectsByCodeMap, subjectsMap } from "@/data/subjects";
 import {
   getApprovedIds,
   hasPrerequisites,
@@ -40,10 +40,16 @@ const palette = [
 ];
 
 export function SubjectSelectionStep() {
-  const { selectedSubjects, setSelectedSubjects, setCurrentStep } =
+  const { personalData, selectedSubjects, setSelectedSubjects, setCurrentStep, markStepCompleted } =
     useWizardStore();
   const navigate = useNavigate();
-  const student = mockStudents[0];
+  const student = useMemo(
+    () =>
+      mockStudents.find(
+        (s) => s.id === personalData.studentId || s.studentId === personalData.studentId,
+      ) ?? mockStudents[0],
+    [personalData.studentId],
+  );
   const allSubjects = subjectsArray;
   const { toasts, addToast, removeToast } = useToast();
 
@@ -91,7 +97,7 @@ export function SubjectSelectionStep() {
   const especialCount = useMemo(() => {
     return selected.filter((s) => {
       const attempts = student.academicHistory.filter(
-        (a) => a.subjectCode === s.id,
+        (a) => a.subjectCode === s.code,
       );
       const nextLevel = getNextAttemptLevel(attempts);
       return nextLevel === 5 || nextLevel === 6;
@@ -100,14 +106,14 @@ export function SubjectSelectionStep() {
 
   const getBlockReason = useCallback(
     (subject: Subject): string | null => {
-      if (approvedSet.has(subject.id)) return `Ya aprobaste ${subject.name}.`;
+      if (approvedSet.has(subject.code)) return `Ya aprobaste ${subject.name}.`;
       if (selectedIds.has(subject.id)) return "Ya está en tu selección.";
       if (!hasPrerequisites(subject, approvedSet)) {
         const missing = subject.prerequisites.filter(
           (p) => !approvedSet.has(p),
         );
         const names = missing
-          .map((id) => subjectsMap.get(id)?.name || id)
+          .map((code) => subjectsByCodeMap.get(code)?.name || code)
           .join(", ");
         return `Requiere aprobar: ${names}.`;
       }
@@ -118,21 +124,41 @@ export function SubjectSelectionStep() {
 
   const canAddSubject = useCallback(
     (subject: Subject) => {
-      if (getBlockReason(subject) !== null) return false;
+      const blockReason = getBlockReason(subject);
       const attempts = student.academicHistory.filter(
-        (a) => a.subjectCode === subject.id,
+        (a) => a.subjectCode === subject.code,
       );
       const nextLevel = getNextAttemptLevel(attempts);
       const isCursoEspecial = nextLevel === 5 || nextLevel === 6;
+      const hasNormalSubjects = selected.some((s) => {
+        const selectedAttempts = student.academicHistory.filter(
+          (a) => a.subjectCode === s.code,
+        );
+        const selectedNextLevel = getNextAttemptLevel(selectedAttempts);
+        return selectedNextLevel !== 5 && selectedNextLevel !== 6;
+      });
+
+      const potentialCredits = calculateTotalCredits([...selected, subject]);
+      if (blockReason) return false;
       if (especialCount >= 2) return false;
+
       if (especialCount === 1) {
-        if (isCursoEspecial) return true;
-        const potentialCredits = calculateTotalCredits([...selected, subject]);
+        if (isCursoEspecial && hasNormalSubjects) return false;
         return potentialCredits <= 20;
       }
-      return true;
+
+      const canAdd = potentialCredits <= 36;
+      console.log('[SubjectSelectionStep] canAddSubject', {
+        especialCount,
+        isCursoEspecial,
+        hasNormalSubjects,
+        potentialCredits,
+        canAdd,
+      });
+
+      return canAdd;
     },
-    [selected, student, especialCount, getBlockReason],
+    [getBlockReason, student, especialCount, selected],
   );
 
   const totalCredits = useMemo(
@@ -141,8 +167,10 @@ export function SubjectSelectionStep() {
   );
 
   const creditRange = useMemo(() => {
-    const maxCredits = especialCount > 0 ? 20 : 36;
-    return { minCredits: 20, maxCredits };
+    if (especialCount > 0) {
+      return { minCredits: 0, maxCredits: 20 };
+    }
+    return { minCredits: 20, maxCredits: 36 };
   }, [especialCount]);
 
   const isCreditsOutOfRange =
@@ -217,12 +245,11 @@ export function SubjectSelectionStep() {
 
   const canSubmit = useMemo(() => {
     const total = totalCredits;
-    const selectedCount = selected.length;
     if (especialCount === 2) {
-      return selectedCount === 2;
+      return selected.length === 2;
     }
     if (especialCount === 1) {
-      return total >= 20 && total <= 20;
+      return total <= 20;
     }
     return total >= 20 && total <= 36;
   }, [especialCount, totalCredits, selected.length]);
@@ -234,6 +261,7 @@ export function SubjectSelectionStep() {
   const confirmNext = () => {
     setShowConfirmModal(false);
     setSelectedSubjects(selected.map((s) => s.code));
+    markStepCompleted(5);
     setCurrentStep(6);
     navigate("/wizard/paso-6");
   };
@@ -256,32 +284,31 @@ export function SubjectSelectionStep() {
         {/* Toast de créditos (absoluto sobre el contenido, no desplaza nada) */}
         <div className="absolute -top-2 right-0 z-20">
           <div
-            className={`rounded-2xl border backdrop-blur shadow-lg px-4 py-3 transition-all duration-300 ease-out overflow-hidden ${
-              isCreditsOutOfRange
-                ? "border-red-200 bg-red-50/95"
-                : "border-blue-200 bg-blue-50/95"
-            } w-[22rem]`}
+            className={`rounded-2xl border backdrop-blur shadow-lg px-4 py-3 transition-all duration-300 ease-out overflow-hidden ${isCreditsOutOfRange
+              ? "border-red-200 bg-red-50/95"
+              : "border-blue-200 bg-blue-50/95"
+              } w-[22rem]`}
           >
             <div className="flex items-start justify-between gap-4">
               <div
                 className="min-w-0"
               >
                 <p
-                  className={`text-xs font-semibold uppercase tracking-[0.24em] ${
-                    isCreditsOutOfRange ? "text-red-700" : "text-blue-700"
-                  }`}
+                  className={`text-xs font-semibold uppercase tracking-[0.24em] ${isCreditsOutOfRange ? "text-red-700" : "text-blue-700"
+                    }`}
                 >
                   Resumen de créditos
                 </p>
                 <div
-                  className={`mt-1 flex flex-wrap items-center gap-2 text-sm ${
-                    isCreditsOutOfRange ? "text-red-900" : "text-blue-900"
-                  }`}
+                  className={`mt-1 flex flex-wrap items-center gap-2 text-sm ${isCreditsOutOfRange ? "text-red-900" : "text-blue-900"
+                    }`}
                 >
-                  <span>Mín 20</span>
-                  <span className={isCreditsOutOfRange ? "text-red-300" : "text-blue-300"}>
-                    •
-                  </span>
+                  {creditRange.minCredits > 0 && <span>Mín {creditRange.minCredits}</span>}
+                  {creditRange.minCredits > 0 && (
+                    <span className={isCreditsOutOfRange ? "text-red-300" : "text-blue-300"}>
+                      •
+                    </span>
+                  )}
                   <span>{especialCount > 0 ? "Máx 20" : "Máx 36"}</span>
                   {especialCount > 0 && (
                     <>
@@ -308,22 +335,19 @@ export function SubjectSelectionStep() {
               </div>
 
               <div
-                className={`shrink-0 min-w-[6rem] text-right transition-colors duration-300 ease-out ${
-                  isCreditsOutOfRange ? "text-red-700" : "text-gray-900"
-                }`}
+                className={`shrink-0 min-w-[6rem] text-right transition-colors duration-300 ease-out ${isCreditsOutOfRange ? "text-red-700" : "text-gray-900"
+                  }`}
               >
                 <span
                   key={totalCredits}
-                  className={`block text-3xl font-bold leading-none tabular-nums transition-all duration-200 ease-out ${
-                    creditsPulse ? "scale-105 opacity-90" : "scale-100 opacity-100"
-                  }`}
+                  className={`block text-3xl font-bold leading-none tabular-nums transition-all duration-200 ease-out ${creditsPulse ? "scale-105 opacity-90" : "scale-100 opacity-100"
+                    }`}
                 >
                   {totalCredits}
                 </span>
                 <span
-                  className={`block text-[0.5rem] font-semibold uppercase tracking-[0.24em] ${
-                    isCreditsOutOfRange ? "text-red-700" : "text-blue-700"
-                  }`}
+                  className={`block text-[0.5rem] font-semibold uppercase tracking-[0.24em] ${isCreditsOutOfRange ? "text-red-700" : "text-blue-700"
+                    }`}
                 >
                   créditos
                 </span>

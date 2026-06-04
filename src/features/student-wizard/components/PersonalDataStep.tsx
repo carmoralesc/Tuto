@@ -1,12 +1,16 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useWizardStore } from "@/stores/useWizardStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { mockStudents } from "@/mocks/students.mock";
 import { personalDataSchema } from "@/features/schemas/personalData.schema";
 
 export function PersonalDataStep() {
-  const { personalData, setPersonalData, setCurrentStep } = useWizardStore();
+  const { personalData, setPersonalData, setCurrentStep, markStepCompleted } = useWizardStore();
+  const { user } = useAuthStore();
   const navigate = useNavigate();
 
   // Form validation schema (input data structure)
@@ -18,7 +22,9 @@ export function PersonalDataStep() {
     secondSurname: z
       .string()
       .min(2, "El segundo apellido debe tener al menos 2 caracteres"),
-    studentId: z.string().regex(/\d{8}$/, "Matrícula inválida (ej: 21001122)"),
+    studentId: z
+      .string()
+      .regex(/^[A-Za-z]?\d{8}$/, "Matrícula inválida (ej: A00123456 o 21001122)"),
     program: z.string().min(3, "Selecciona un programa académico"),
   });
 
@@ -32,6 +38,7 @@ export function PersonalDataStep() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -45,10 +52,53 @@ export function PersonalDataStep() {
     mode: "onChange",
   });
 
+  useEffect(() => {
+    if (!user || user.role !== "student") return;
+
+    const alreadyFilled =
+      personalData.firstName.trim().length > 0 &&
+      personalData.lastName.trim().length > 0 &&
+      personalData.studentId.trim().length > 0 &&
+      personalData.program.trim().length > 0;
+    if (alreadyFilled) return;
+
+    const student =
+      mockStudents.find((s) => s.id === user.id || s.studentId === user.username) ?? null;
+
+    const fullName = student
+      ? `${student.firstName} ${student.lastName}`.trim()
+      : user.name;
+    const nameParts = fullName.split(" ").filter(Boolean);
+    const firstName = student?.firstName ?? nameParts[0] ?? "";
+    const lastName = student?.lastName ?? nameParts.slice(1).join(" ");
+    const lastNameParts = lastName.split(" ").filter(Boolean);
+
+    const firstSurname = lastNameParts[0] ?? "";
+    const secondSurname = lastNameParts.slice(1).join(" ");
+    const studentId = student?.studentId ?? user.username;
+    const program = student?.enrolledProgram ?? personalData.program;
+
+    reset({
+      firstName,
+      firstSurname,
+      secondSurname,
+      studentId,
+      program,
+    });
+
+    setPersonalData({
+      firstName,
+      lastName: [firstSurname, secondSurname].filter(Boolean).join(" "),
+      studentId,
+      program,
+    });
+  }, [user, personalData, reset, setPersonalData]);
+
   const onSubmit = (data: FormData) => {
     // Transformar datos del formulario a modelo de almacenamiento
     const transformed = personalDataSchema.parse(data);
     setPersonalData(transformed);
+    markStepCompleted(1);
     setCurrentStep(2);
     navigate("/wizard/paso-2");
   };

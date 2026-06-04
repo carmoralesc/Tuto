@@ -4,22 +4,34 @@ import {
   Navigate,
 } from "react-router-dom";
 import App from "../App";
-import TutorDashboardPage from "../pages/TutorDashboardPage";
-import NotFoundPage from "../pages/NotFoundPage";
+import LoginPage from "@/pages/LoginPage";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import {
   PersonalDataStep,
   FileUploadStep,
   FailedSubjectsStep,
+  FailureReasonsStep,
+  SubjectSelectionStep,
+  SignatureStep,
+  ConfirmationStep,
+  ProtectedStep,
 } from "@/features/student-wizard/components";
-import { FailureReasonsStep } from "@/features/student-wizard/components/FailureReasonsStep";
-import { SubjectSelectionStep } from "@/features/student-wizard/components/SubjectSelectionStep";
-import { SignatureStep } from "@/features/student-wizard/components/SignatureStep";
-import { ConfirmationStep } from "@/features/student-wizard/components/ConfirmationStep";
+import TutorDashboardPage from "../pages/TutorDashboardPage";
+import NotFoundPage from "../pages/NotFoundPage";
+import ProfilePage from "../pages/ProfilePage";
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
     path: "/",
-    element: <App />,
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
@@ -27,40 +39,80 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <TutorDashboardPage />,
+        element: (
+          <ProtectedRoute>
+            <TutorDashboardPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "wizard",
         children: [
           {
             path: "paso-1",
-            element: <PersonalDataStep />,
+            element: (
+              <ProtectedStep stepNumber={1}>
+                <PersonalDataStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-2",
-            element: <FileUploadStep />,
+            element: (
+              <ProtectedStep stepNumber={2}>
+                <FileUploadStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-3",
-            element: <FailedSubjectsStep />,
+            element: (
+              <ProtectedStep stepNumber={3}>
+                <FailedSubjectsStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-4",
-            element: <FailureReasonsStep />,
+            element: (
+              <ProtectedStep stepNumber={4}>
+                <FailureReasonsStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-5",
-            element: <SubjectSelectionStep />,
+            element: (
+              <ProtectedStep stepNumber={5}>
+                <SubjectSelectionStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-6",
-            element: <SignatureStep />,
+            element: (
+              <ProtectedStep stepNumber={6}>
+                <SignatureStep />
+              </ProtectedStep>
+            ),
           },
           {
             path: "paso-7",
-            element: <ConfirmationStep />,
+            element: (
+              <ProtectedStep stepNumber={7}>
+                <ConfirmationStep />
+              </ProtectedStep>
+            ),
           },
         ],
+      },
+      {
+        path: "perfil",
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "*",

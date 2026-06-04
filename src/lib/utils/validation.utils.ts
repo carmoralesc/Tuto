@@ -9,8 +9,8 @@ export interface ValidationViolation {
 }
 
 /**
- * Obtiene un Set con los IDs de materias aprobadas (sin importar el código, usamos subjectId).
- * Asumimos que el historial guarda subjectCode que corresponde al id del Subject.
+ * Obtiene un Set con los códigos de materias aprobadas.
+ * Asumimos que el historial guarda `subjectCode` que corresponde al `code` del Subject.
  */
 export function getApprovedIds(student: Student): Set<string> {
     return new Set(
@@ -82,17 +82,18 @@ export function detectViolations(
             });
         }
 
+
+        // 2.3 Verificar disponibilidad según nivel (baja definitiva)
         // 2.2 Verificar si ya fue aprobada
-        if (approved.has(subject.id)) {
+        if (approved.has(subject.code)) {
             violations.push({
                 type: 'subject-unavailable',
                 message: `La materia ${subject.name} ya fue aprobada anteriormente.`,
-                subjectCode: subject.id,
+                subjectCode: subject.code,
             });
         }
 
-        // 2.3 Verificar disponibilidad según nivel (baja definitiva)
-        const attemptsForSubject = student.academicHistory.filter(a => a.subjectCode === subject.id);
+        const attemptsForSubject = student.academicHistory.filter(a => a.subjectCode === subject.code);
         const nextLevel = getNextAttemptLevel(attemptsForSubject);
         if (nextLevel === null) {
             const last = attemptsForSubject[attemptsForSubject.length - 1];

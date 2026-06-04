@@ -9,7 +9,7 @@ function generateCaptcha() {
 }
 
 export function SignatureStep() {
-  const { setSignature, setCurrentStep } = useWizardStore();
+  const { setSignature, setCurrentStep, markStepCompleted } = useWizardStore();
   const navigate = useNavigate();
 
   const [signatureText, setSignatureText] = useState("");
@@ -37,6 +37,7 @@ export function SignatureStep() {
     }
 
     setSignature(signatureText.trim());
+    markStepCompleted(6);
     setCurrentStep(7);
     navigate("/wizard/paso-7");
   };

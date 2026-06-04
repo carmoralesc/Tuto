@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWizardStore } from "@/stores/useWizardStore";
-import { mockStudents } from "@/mocks/students.mocks";
-import { mockSubjects } from "@/mocks/subjects.mocks";
+import { mockStudents } from "@/mocks/students.mock";
+import { mockSubjects } from "@/mocks/subjects.mock";
 import type { AcademicLevel } from "@/types/student.types";
 import { getCategoryFromLevel } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ interface FailedSubjectDetail {
 }
 
 export function FailedSubjectsStep() {
-  const { setFailedSubjects, setCurrentStep } = useWizardStore();
+  const { setFailedSubjects, setCurrentStep, markStepCompleted } = useWizardStore();
   const navigate = useNavigate();
 
   const [isAnalyzing, setIsAnalyzing] = useState(true);
@@ -46,8 +46,8 @@ export function FailedSubjectsStep() {
         const latestFailedAttempt =
           failedAttempts.length > 0
             ? failedAttempts.reduce((latest, current) =>
-                current.level > latest.level ? current : latest,
-              )
+              current.level > latest.level ? current : latest,
+            )
             : null;
 
         return {
@@ -68,6 +68,7 @@ export function FailedSubjectsStep() {
 
   const handleConfirm = () => {
     setFailedSubjects(detectedSubjects.map((d) => d.code));
+    markStepCompleted(3);
     setCurrentStep(4);
     navigate("/wizard/paso-4");
   };

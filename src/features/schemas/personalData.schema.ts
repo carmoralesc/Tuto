@@ -4,7 +4,7 @@ export const formSchema = z.object({
     firstName: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
     firstSurname: z.string().min(2, 'El primer apellido debe tener al menos 2 caracteres'),
     secondSurname: z.string().min(2, 'El segundo apellido debe tener al menos 2 caracteres'),
-    studentId: z.string().regex(/\d{8}$/, 'Matrícula inválida (ej: 21001122)'),
+    studentId: z.string().regex(/^[A-Za-z]?\d{8}$/, 'Matrícula inválida (ej: A00123456 o 21001122)'),
     program: z.string().min(3, 'Selecciona un programa académico'),
 });
 
