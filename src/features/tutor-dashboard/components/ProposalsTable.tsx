@@ -200,80 +200,82 @@ export function ProposalsTable({ proposals, onSelectProposal }: ProposalsTablePr
   });
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
-        <button
-          onClick={() => setColumnFilters([{ id: 'riskCategory', value: 'high' }])}
-          className="px-3 py-1 text-sm rounded-full bg-red-100 text-red-800 hover:bg-red-200"
-        >
-          Alto riesgo
-        </button>
-        <button
-          onClick={() => setColumnFilters([{ id: 'riskCategory', value: 'medium' }])}
-          className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
-        >
-          Riesgo medio
-        </button>
-        <button
-          onClick={() => setColumnFilters([{ id: 'riskCategory', value: 'low' }])}
-          className="px-3 py-1 text-sm rounded-full bg-green-100 text-green-800 hover:bg-green-200"
-        >
-          Riesgo bajo
-        </button>
-        <button
-          onClick={() => setColumnFilters([{ id: 'status', value: 'submitted' }])}
-          className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200"
-        >
-          Pendientes
-        </button>
-        <button
-          onClick={() => setColumnFilters([{ id: 'status', value: 'draft' }])}
-          className="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200"
-        >
-          Borradores
-        </button>
-        <button
-          onClick={() => setColumnFilters([])}
-          className="px-3 py-1 text-sm rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
-        >
-          Limpiar filtros
-        </button>
-      </div>
+    <div className="rounded-2xl bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur overflow-x-auto">
+      <div className="p-4 space-y-4">
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setColumnFilters([{ id: 'riskCategory', value: 'high' }])}
+            className="px-3 py-1 text-sm rounded-full bg-red-100 text-red-800 hover:bg-red-200"
+          >
+            Alto riesgo
+          </button>
+          <button
+            onClick={() => setColumnFilters([{ id: 'riskCategory', value: 'medium' }])}
+            className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+          >
+            Riesgo medio
+          </button>
+          <button
+            onClick={() => setColumnFilters([{ id: 'riskCategory', value: 'low' }])}
+            className="px-3 py-1 text-sm rounded-full bg-green-100 text-green-800 hover:bg-green-200"
+          >
+            Riesgo bajo
+          </button>
+          <button
+            onClick={() => setColumnFilters([{ id: 'status', value: 'submitted' }])}
+            className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200"
+          >
+            Pendientes
+          </button>
+          <button
+            onClick={() => setColumnFilters([{ id: 'status', value: 'draft' }])}
+            className="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200"
+          >
+            Borradores
+          </button>
+          <button
+            onClick={() => setColumnFilters([])}
+            className="px-3 py-1 text-sm rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+          >
+            Limpiar filtros
+          </button>
+        </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="px-4 py-3 text-left font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    {{ asc: ' ↑', desc: ' ↓' }[header.column.getIsSorted() as string] ?? ''}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={onSelectProposal ? () => onSelectProposal(row.original.id) : undefined}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="px-4 py-3 text-gray-700">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="px-4 py-3 text-left font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {{ asc: ' ↑', desc: ' ↓' }[header.column.getIsSorted() as string] ?? ''}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                  onClick={onSelectProposal ? () => onSelectProposal(row.original.id) : undefined}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} className="px-4 py-3 text-gray-700">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

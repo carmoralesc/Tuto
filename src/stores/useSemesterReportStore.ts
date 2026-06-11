@@ -46,7 +46,7 @@ const mockReport: SemesterReport = {
     periodo: 'Ene-Jun 2026',
     semestre: '2026-A',
     carrera: 'Ingeniería en Sistemas Computacionales',
-    tutorName: 'Mtra. Laura Sánchez',
+    tutorName: 'Mtra. Laura Sánchez Vazquez',
     fechaEntrega: '2026-06-10',
     totalTutoradosDesdePrimerSemestre: 7,
     totalTutoradosEsteSemestre: 7,

@@ -348,7 +348,8 @@ export function generateSemesterReportHTML(report: SemesterReport): string {
     <div class="info">
       <span><strong>Tutor:</strong> ${report.tutorName}</span>
       <span><strong>Carrera:</strong> ${report.carrera}</span>
-    <span><strong>Periodo:</strong> ${report.periodo} (${report.semestre})</span>
+    <span><strong>Periodo:</strong> ${report.periodo}</span>
+    <span><strong>Semestre:</strong> ${report.semestre}</span>
       <span><strong>Entrega:</strong> ${report.fechaEntrega}</span>
       <span><strong>Tutorados históricos:</strong> ${report.totalTutoradosDesdePrimerSemestre}</span>
       <span><strong>Tutorados este semestre:</strong> ${report.totalTutoradosEsteSemestre}</span>

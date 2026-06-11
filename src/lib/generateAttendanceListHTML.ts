@@ -7,7 +7,8 @@ export function generateAttendanceListHTML(
     attendances: Record<number, boolean[]>,
     carrera: string,
     tutorName: string,
-    semestreCursado: string,
+    periodo: string,
+    semestre: string,
 ): string {
     const rows = students
         .map(
@@ -76,7 +77,7 @@ export function generateAttendanceListHTML(
       <h3>LISTA DE ASISTENCIA</h3>
       <p><strong>Carrera:</strong> ${carrera}</p>
       <p><strong>Tutor:</strong> ${tutorName}</p>
-      <p><strong>Periodo:</strong> Ene-Jun 2026 (2026-A) &nbsp;|&nbsp; <strong>Semestre cursado:</strong> ${semestreCursado}°</p>
+      <p><strong>Periodo:</strong> ${periodo} &nbsp;|&nbsp; <strong>Semestre:</strong> ${semestre}</p>
     </div>
     <table>
       <thead>

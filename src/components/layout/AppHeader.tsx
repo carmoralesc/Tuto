@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
     AcademicCapIcon,
     ChevronDownIcon,
@@ -17,7 +17,15 @@ function getInitials(name: string): string {
 
 export function AppHeader() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { user, logout } = useAuthStore();
+
+    const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + '/');
+    const navLinkClass = (path: string) =>
+        `rounded-lg px-3 py-2 text-sm font-medium transition ${isActive(path)
+            ? 'bg-blue-50 text-blue-700'
+            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+        }`;
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -90,19 +98,19 @@ export function AppHeader() {
                                 <>
                                     <Link
                                         to="/dashboard"
-                                        className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition"
+                                        className={navLinkClass('/dashboard')}
                                     >
                                         Dashboard
                                     </Link>
                                     <Link
                                         to="/tutor/seguimiento"
-                                        className="rounded-lg px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 transition"
+                                        className={navLinkClass('/tutor/seguimiento')}
                                     >
                                         Seguimiento
                                     </Link>
                                     <Link
                                         to="/tutor/reporte-semestral"
-                                        className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition"
+                                        className={navLinkClass('/tutor/reporte-semestral')}
                                     >
                                         Reporte
                                     </Link>
