@@ -39,70 +39,91 @@ export function generateSabanasHTML(
   <meta charset="UTF-8">
   <title>SEGUIMIENTO TUTORIAL (Sábana)</title>
   <style>
-    @page { size: letter landscape; margin: 1cm; }
+    @page { size: letter landscape; margin: 1.2cm; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 9px; color: #1e293b; padding: 20px; }
-    .header { text-align: center; margin-bottom: 12px; }
-    .header h2 { font-size: 14px; margin: 0; font-weight: 700; color: #1e3a5f; }
-    .header h3 { font-size: 12px; margin: 2px 0 0; color: #475569; font-weight: 500; }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 9px; color: #1e293b; padding: 24px;
+      background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%);
+    }
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+      padding: 20px;
+    }
+    .header { text-align: center; margin-bottom: 14px; }
+    .header h2 { font-size: 15px; margin: 0; font-weight: 700; color: #1e3a5f; letter-spacing: -0.3px; }
+    .header h3 { font-size: 11px; margin: 2px 0 0; color: #475569; font-weight: 500; }
     .header p { font-size: 9px; margin: 4px 0; color: #64748b; }
-    .info { margin-bottom: 8px; font-size: 9px; }
-    .info span { margin-right: 20px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #444; padding: 3px 4px; text-align: center; }
-    th { background: #e5e7eb; font-weight: bold; }
+    .info { margin-bottom: 10px; font-size: 8px; color: #475569; }
+    .info span { margin-right: 18px; }
+    .info strong { color: #1e293b; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    th, td { border: 1px solid #cbd5e1; padding: 2px 3px; text-align: center; }
+    thead tr:first-child th {
+      background: linear-gradient(180deg, #f0f4ff 0%, #e2e8f0 100%);
+      font-weight: 700; font-size: 7px; color: #1e3a5f;
+    }
+    thead tr:nth-child(2) th {
+      background: #f8fafc; font-weight: 600; font-size: 6.5px; color: #334155;
+    }
+    tbody tr:nth-child(even) { background: #f8fafc; }
     .bg-blue { background: #dbeafe; }
     .bg-green { background: #dcfce7; }
     .bg-red { background: #fee2e2; }
     .text-green { color: #166534; font-weight: bold; }
-    .text-gray { color: #9ca3af; }
+    .text-gray { color: #94a3b8; }
     .text-red { color: #dc2626; font-weight: bold; }
     @media print {
-      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: white !important; }
+      .card { box-shadow: none; border: 1px solid #e2e8f0; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h2>Instituto Tecnológico de Orizaba</h2>
-    <h3>Departamento de Sistemas y Computación</h3>
-    <p>SEGUIMIENTO TUTORIAL (Sábana) &mdash; Documento 4</p>
+  <div class="card">
+    <div class="header">
+      <h2>Instituto Tecnológico de Orizaba</h2>
+      <h3>Departamento de Sistemas y Computación</h3>
+      <p>SEGUIMIENTO TUTORIAL (Sábana) — Documento 4</p>
+    </div>
+    <div class="info">
+      <span><strong>Tutor:</strong> ${tutorName}</span>
+      <span><strong>Carrera:</strong> ${carrera}</span>
+      <span><strong>Semestre de ingreso:</strong> ${semestreIngreso}</span>
+      <span><strong>Total alumnos:</strong> ${students.length}</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">No.</th>
+          <th rowspan="2">Núm. Control</th>
+          <th rowspan="2">Nombre</th>
+          <th rowspan="2">P.B.</th>
+          <th rowspan="2">P.E.A.</th>
+          <th colspan="10" class="bg-blue">Detección de necesidades de tutoría básica</th>
+          <th rowspan="2">T1</th>
+          <th rowspan="2">T2</th>
+          <th rowspan="2">T3</th>
+          <th rowspan="2">T4</th>
+          <th colspan="4" class="bg-green">TEST 5</th>
+          <th rowspan="2" class="bg-red">MR Total</th>
+        </tr>
+        <tr>
+          ${NEC_KEYS.map((k) => `<th class="bg-blue">${k}</th>`).join('')}
+          <th class="bg-green">ORG</th>
+          <th class="bg-green">TE</th>
+          <th class="bg-green">M</th>
+          <th class="bg-green">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
   </div>
-  <div class="info">
-    <span><strong>Tutor:</strong> ${tutorName}</span>
-    <span><strong>Carrera:</strong> ${carrera}</span>
-    <span><strong>Semestre de ingreso:</strong> ${semestreIngreso}</span>
-    <span><strong>Total alumnos:</strong> ${students.length}</span>
-  </div>
-  <table>
-    <thead>
-      <tr>
-        <th rowspan="2">No.</th>
-        <th rowspan="2">Núm. Control</th>
-        <th rowspan="2">Nombre</th>
-        <th rowspan="2">P.B.</th>
-        <th rowspan="2">P.E.A.</th>
-        <th colspan="10" class="bg-blue">Detección de necesidades de tutoría básica</th>
-        <th rowspan="2">T1</th>
-        <th rowspan="2">T2</th>
-        <th rowspan="2">T3</th>
-        <th rowspan="2">T4</th>
-        <th colspan="4" class="bg-green">TEST 5</th>
-        <th rowspan="2" class="bg-red">MR Total</th>
-      </tr>
-      <tr>
-        ${NEC_KEYS.map((k) => `<th class="bg-blue">${k}</th>`).join('')}
-        <th class="bg-green">ORG</th>
-        <th class="bg-green">TE</th>
-        <th class="bg-green">M</th>
-        <th class="bg-green">Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${rows}
-    </tbody>
-  </table>
-  <p style="margin-top:16px;font-size:8px;color:#6b7280;">Generado desde TutorTec &mdash; ${new Date().toLocaleDateString('es-MX')}</p>
+  <p style="margin-top:16px;font-size:8px;color:#94a3b8;text-align:center;">Generado desde TutorTec — ${new Date().toLocaleDateString('es-MX')}</p>
 </body>
 </html>`;
 }
@@ -277,54 +298,66 @@ export function generateSemesterReportHTML(report: SemesterReport): string {
     body {
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       font-size: 8px; color: #1e293b; padding: 24px;
-      background: #ffffff;
+      background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%);
     }
-    .header { text-align: center; border-bottom: 2px solid #1e3a5f; padding-bottom: 12px; margin-bottom: 14px; }
-    .header h2 { font-size: 15px; color: #1e3a5f; margin: 0; font-weight: 700; letter-spacing: -0.3px; }
-    .header h3 { font-size: 11px; color: #475569; margin: 3px 0 0; font-weight: 500; }
-    .header p { font-size: 9px; color: #64748b; margin: 5px 0 0; font-weight: 500; letter-spacing: 0.3px; }
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+      padding: 20px;
+    }
+    .header { text-align: center; margin-bottom: 14px; }
+    .header h2 { font-size: 15px; margin: 0; font-weight: 700; color: #1e3a5f; letter-spacing: -0.3px; }
+    .header h3 { font-size: 11px; margin: 2px 0 0; color: #475569; font-weight: 500; }
+    .header p { font-size: 9px; margin: 4px 0; color: #64748b; }
     .info { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-bottom: 12px; font-size: 8px; color: #475569; }
     .info strong { color: #1e293b; }
-    table { width: 100%; border-collapse: collapse; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; }
     th, td { border: 1px solid #cbd5e1; padding: 3px 4px; text-align: center; }
-    th {
+    thead tr:first-child th {
       background: linear-gradient(180deg, #f0f4ff 0%, #e2e8f0 100%);
       font-weight: 700; font-size: 7px; color: #1e3a5f;
     }
+    thead tr:nth-child(2) th {
+      background: #f8fafc; font-weight: 600; font-size: 6.5px; color: #334155;
+    }
+    tbody tr:nth-child(even) { background: #f8fafc; }
     .bg-blue { background: #dbeafe; }
     .bg-amber { background: #fef3c7; }
     .bg-red { background: #fee2e2; }
     .text-red { color: #dc2626; font-weight: 700; }
-    tbody tr:nth-child(even) { background: #f8fafc; }
     tfoot td { font-weight: 700; background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%); }
     .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; margin-top: 28px; }
     .sig-box { text-align: center; }
-    .sig-line { border-bottom: 1px solid #1e293b; margin-top: 34px; }
-    .sig-label { font-size: 8px; color: #64748b; margin-top: 4px; font-weight: 500; }
+    .sig-line { border-top: 1px solid #94a3b8; margin-top: 34px; margin-bottom: 4px; }
+    .sig-label { font-size: 8px; color: #64748b; font-weight: 500; }
     .legend { margin-top: 12px; font-size: 7px; color: #64748b; }
-    @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: white !important; }
+      .card { box-shadow: none; border: 1px solid #e2e8f0; }
+    }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h2>Instituto Tecnológico de Orizaba</h2>
-    <h3>Departamento de Sistemas y Computación</h3>
-    <p>REPORTE SEMESTRAL DE ACTIVIDADES DEL TUTOR — Documento 5</p>
-  </div>
-  <div class="info">
-    <span><strong>Tutor:</strong> ${report.tutorName}</span>
-    <span><strong>Carrera:</strong> ${report.carrera}</span>
-    <span><strong>Periodo:</strong> ${report.periodo}</span>
-    <span><strong>Semestre:</strong> ${report.semestre}</span>
-    <span><strong>Entrega:</strong> ${report.fechaEntrega}</span>
-    <span><strong>Tutorados históricos:</strong> ${report.totalTutoradosDesdePrimerSemestre}</span>
-    <span><strong>Tutorados este semestre:</strong> ${report.totalTutoradosEsteSemestre}</span>
-  </div>
-  <table>
-    <thead>
-      <tr>
-        <th rowspan="2">No.</th><th rowspan="2">Control</th><th rowspan="2">Nombre</th>
-        <th colspan="3" class="bg-blue">Sesiones</th>
+  <div class="card">
+    <div class="header">
+      <h2>Instituto Tecnológico de Orizaba</h2>
+      <h3>Departamento de Sistemas y Computación</h3>
+      <p>REPORTE SEMESTRAL DE ACTIVIDADES DEL TUTOR — Documento 5</p>
+    </div>
+    <div class="info">
+      <span><strong>Tutor:</strong> ${report.tutorName}</span>
+      <span><strong>Carrera:</strong> ${report.carrera}</span>
+    <span><strong>Periodo:</strong> ${report.periodo} (${report.semestre})</span>
+      <span><strong>Entrega:</strong> ${report.fechaEntrega}</span>
+      <span><strong>Tutorados históricos:</strong> ${report.totalTutoradosDesdePrimerSemestre}</span>
+      <span><strong>Tutorados este semestre:</strong> ${report.totalTutoradosEsteSemestre}</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">No.</th><th rowspan="2">Control</th><th rowspan="2">Nombre</th>
+          <th colspan="3" class="bg-blue">Sesiones</th>
         <th colspan="3" class="bg-amber">Canalizaciones</th>
         <th rowspan="2">Observaciones</th>
         <th rowspan="2">Cambio<br>Tutor</th><th rowspan="2">Cambio<br>Carrera</th><th rowspan="2">Cambio<br>Inst.</th>
@@ -355,6 +388,7 @@ export function generateSemesterReportHTML(report: SemesterReport): string {
     <div class="sig-box"><div class="sig-line"></div><div class="sig-label">Vo.Bo. Coordinador de Tutoría</div></div>
   </div>
   <p style="margin-top:16px;font-size:7px;color:#94a3b8;text-align:center;">Generado desde TutorTec — ${new Date().toLocaleDateString('es-MX')}</p>
+  </div>
 </body>
 </html>`;
 }

@@ -11,4 +11,4 @@ export const CANALIZACION_CODES: Record<number, string> = {
 export const SEGUIMIENTO_LABELS = ['1er Seg.', '2do Seg.', '3er Seg.'] as const;
 
 // Períodos disponibles
-export const PERIODOS_DISPONIBLES = ['2025A', '2025B', '2026A', '2026B'] as const;
+export const PERIODOS_DISPONIBLES = ['Ene-Jun 2025', 'Ago-Dic 2025', 'Ene-Jun 2026', 'Ago-Dic 2026'] as const;

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { PrinterIcon } from '@heroicons/react/24/outline';
 import { useStudentTrackingStore } from '@/stores/useStudentTrackingStore';
 import { generateSabanasHTML } from '@/lib/generateSabanasHTML';
+import { generateAttendanceListHTML, generateMockAttendances } from '@/lib/generateAttendanceListHTML';
 import type { StudentTrackingData } from '@/types/student-tracking.types';
 
 const NEC_KEYS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'] as const;
@@ -33,6 +34,25 @@ export function TutorTrackingList() {
         setTimeout(() => w.print(), 500);
     };
 
+    const handlePrintAttendance = () => {
+        const students = allTrackingData.map((s) => ({ name: s.fullName }));
+        const attendances = generateMockAttendances(students.length);
+        const html = generateAttendanceListHTML(
+            students,
+            attendances,
+            'Ingeniería en Sistemas Computacionales',
+            'Mtra. Laura Sánchez',
+            '2',
+        );
+        const w = window.open('', '_blank', 'width=1200,height=800');
+        if (!w) return;
+        w.document.write(html);
+        w.document.close();
+        w.focus();
+        w.onafterprint = () => w.close();
+        setTimeout(() => w.print(), 400);
+    };
+
     if (allTrackingData.length === 0) {
         return (
             <div className="max-w-4xl mx-auto px-4 py-16 text-center">
@@ -51,14 +71,24 @@ export function TutorTrackingList() {
                         {allTrackingData.length} estudiante{allTrackingData.length !== 1 ? 's' : ''} registrado{allTrackingData.length !== 1 ? 's' : ''}
                     </p>
                 </div>
-                <button
-                    type="button"
-                    onClick={handlePrintAll}
-                    className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all duration-300"
-                >
-                    <PrinterIcon className="h-5 w-5" />
-                    Imprimir Sábana Completa
-                </button>
+                <div className="flex flex-wrap items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={handlePrintAll}
+                        className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all duration-300"
+                    >
+                        <PrinterIcon className="h-5 w-5" />
+                        Imprimir Sábana Completa
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handlePrintAttendance}
+                        className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-700 transition-all duration-300"
+                    >
+                        <PrinterIcon className="h-5 w-5" />
+                        Lista de Asistencia
+                    </button>
+                </div>
             </div>
 
             <div

@@ -43,8 +43,8 @@ function makeStudentReport(
 
 const mockReport: SemesterReport = {
     id: 'rep-2026A-001',
-    periodo: '2026A',
-    semestre: '2°',
+    periodo: 'Ene-Jun 2026',
+    semestre: '2026-A',
     carrera: 'Ingeniería en Sistemas Computacionales',
     tutorName: 'Mtra. Laura Sánchez',
     fechaEntrega: '2026-06-10',

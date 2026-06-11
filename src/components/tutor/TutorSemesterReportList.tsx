@@ -64,8 +64,7 @@ export function TutorSemesterReportList() {
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 text-sm">
                     <div><span className="text-gray-500">Carrera:</span> <span className="font-medium">{report.carrera}</span></div>
-                    <div><span className="text-gray-500">Periodo:</span> <span className="font-medium">{report.periodo}</span></div>
-                    <div><span className="text-gray-500">Semestre:</span> <span className="font-medium">{report.semestre}</span></div>
+                    <div><span className="text-gray-500">Periodo:</span> <span className="font-medium">{report.periodo} ({report.semestre})</span></div>
                     <div><span className="text-gray-500">Entrega:</span> <span className="font-medium">{report.fechaEntrega}</span></div>
                     <div><span className="text-gray-500">Tutor:</span> <span className="font-medium">{report.tutorName}</span></div>
                     <div><span className="text-gray-500">Tutorados (histórico):</span> <span className="font-medium">{report.totalTutoradosDesdePrimerSemestre}</span></div>
@@ -106,12 +105,12 @@ export function TutorSemesterReportList() {
                             <th rowSpan={2} className="text-left">Nombre</th>
                             <th colSpan={3} className="bg-blue-50">Sesiones asistidas</th>
                             <th colSpan={3} className="bg-amber-50">Canalizaciones</th>
-                            <th rowSpan={2} className="w-32">Observaciones</th>
+                            <th rowSpan={2} className="w-44">Observaciones</th>
                             <th rowSpan={2} className="w-16">Cambio Tutor</th>
                             <th rowSpan={2} className="w-16">Cambio Carrera</th>
                             <th rowSpan={2} className="w-16">Cambio Inst.</th>
-                            <th rowSpan={2} className="w-28">Curso Especial</th>
-                            <th rowSpan={2} className="w-28">Repite Curso</th>
+                            <th rowSpan={2} className="w-36">Curso Especial</th>
+                            <th rowSpan={2} className="w-36">Repite Curso</th>
                             <th rowSpan={2} className="w-16 bg-red-50">MR Total</th>
                             <th rowSpan={2} className="w-16">Promedio</th>
                             <th rowSpan={2} className="w-16">Boleta</th>
@@ -153,12 +152,12 @@ export function TutorSemesterReportList() {
                                         ? <span className={e.canalizaciones.asistioTercerSeguimiento ? '' : 'text-red-600 font-bold'}>{e.canalizaciones.tercerSeguimiento.join(',')}{!e.canalizaciones.asistioTercerSeguimiento ? ' ⃝' : ''}</span>
                                         : '—'}
                                 </td>
-                                <td className="text-xs max-w-32 truncate" title={e.observaciones}>{e.observaciones || '—'}</td>
+                                <td className="text-xs max-w-44 truncate" title={e.observaciones}>{e.observaciones || '—'}</td>
                                 <td className="text-center">{siNo(e.cambioTutor)}</td>
                                 <td className="text-center">{siNo(e.cambioCarrera)}</td>
                                 <td className="text-center">{siNo(e.cambioInstituto)}</td>
-                                <td className="text-xs max-w-28 truncate" title={e.cursosEspeciales.join(', ')}>{e.cursosEspeciales.join(', ') || '—'}</td>
-                                <td className="text-xs max-w-28 truncate" title={e.repiteCursos.join(', ')}>{e.repiteCursos.join(', ') || '—'}</td>
+                                <td className="text-xs max-w-36 truncate" title={e.cursosEspeciales.join(', ')}>{e.cursosEspeciales.join(', ') || '—'}</td>
+                                <td className="text-xs max-w-36 truncate" title={e.repiteCursos.join(', ')}>{e.repiteCursos.join(', ') || '—'}</td>
                                 <td className="text-center font-bold bg-red-50/30">
                                     <span className={e.totalMateriasReprobadas > 0 ? 'text-red-600' : 'text-gray-400'}>{e.totalMateriasReprobadas}</span>
                                 </td>
