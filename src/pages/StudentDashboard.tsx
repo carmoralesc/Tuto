@@ -29,7 +29,7 @@ export default function StudentDashboard() {
                 <button
                     type="button"
                     onClick={() => navigate('/wizard/paso-1')}
-                    className="group flex flex-col items-center gap-4 rounded-2xl border-2 border-gray-200 bg-white p-8 shadow-sm transition hover:border-blue-400 hover:shadow-md"
+                    className="group flex flex-col items-center gap-4 rounded-2xl border-2 border-gray-200 bg-white/95 p-8 shadow-2xl ring-1 ring-black/5 backdrop-blur transition-all duration-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-200/30"
                 >
                     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 group-hover:bg-blue-200 transition">
                         <AcademicCapIcon className="h-8 w-8" />

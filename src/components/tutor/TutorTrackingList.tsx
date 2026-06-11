@@ -54,44 +54,53 @@ export function TutorTrackingList() {
                 <button
                     type="button"
                     onClick={handlePrintAll}
-                    className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition"
+                    className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all duration-300"
                 >
                     <PrinterIcon className="h-5 w-5" />
                     Imprimir Sábana Completa
                 </button>
             </div>
 
-            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-x-auto">
-                <table className="w-full text-xs border-collapse">
+            <div
+                className="rounded-2xl bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur overflow-x-auto scrollbar-hidden scrollbar-on-hover table-tutortec-wrapper"
+                onWheel={(e) => {
+                    const el = e.currentTarget;
+                    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                        el.scrollLeft += e.deltaY;
+                        e.preventDefault();
+                    }
+                }}
+            >
+                <table className="table-tutortec">
                     <thead>
-                        <tr className="bg-gray-100">
-                            <th rowSpan={2} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 w-10">No.</th>
-                            <th rowSpan={2} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 w-28">Núm. Control</th>
-                            <th rowSpan={2} className="border border-gray-300 px-3 py-2 text-left font-bold text-gray-800">Nombre</th>
-                            <th rowSpan={2} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 w-14">P.B.</th>
-                            <th rowSpan={2} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 w-14">P.E.A.</th>
-                            <th colSpan={10} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 bg-blue-100">
+                        <tr>
+                            <th rowSpan={2} className="w-10">No.</th>
+                            <th rowSpan={2} className="w-28">Núm. Control</th>
+                            <th rowSpan={2} className="text-left">Nombre</th>
+                            <th rowSpan={2} className="w-14">P.B.</th>
+                            <th rowSpan={2} className="w-14">P.E.A.</th>
+                            <th colSpan={10} className="bg-blue-100">
                                 Detección de necesidades de tutoría básica
                             </th>
-                            <th rowSpan={2} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 w-10">T1</th>
-                            <th rowSpan={2} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 w-10">T2</th>
-                            <th rowSpan={2} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 w-10">T3</th>
-                            <th rowSpan={2} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 w-10">T4</th>
-                            <th colSpan={4} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 bg-green-100">
+                            <th rowSpan={2} className="w-10">T1</th>
+                            <th rowSpan={2} className="w-10">T2</th>
+                            <th rowSpan={2} className="w-10">T3</th>
+                            <th rowSpan={2} className="w-10">T4</th>
+                            <th colSpan={4} className="bg-green-100">
                                 TEST 5
                             </th>
-                            <th rowSpan={2} className="border border-gray-300 px-2 py-2 text-center font-bold text-gray-800 w-12 bg-red-50">
+                            <th rowSpan={2} className="w-12 bg-red-50">
                                 MR Total
                             </th>
                         </tr>
-                        <tr className="bg-gray-50">
+                        <tr>
                             {NEC_KEYS.map((k) => (
-                                <th key={k} className="border border-gray-300 px-1 py-1 text-center font-semibold text-gray-700 w-7 bg-blue-50">{k}</th>
+                                <th key={k} className="w-7 bg-blue-50">{k}</th>
                             ))}
-                            <th className="border border-gray-300 px-1 py-1 text-center font-semibold text-gray-700 w-10 bg-green-50">ORG</th>
-                            <th className="border border-gray-300 px-1 py-1 text-center font-semibold text-gray-700 w-10 bg-green-50">TE</th>
-                            <th className="border border-gray-300 px-1 py-1 text-center font-semibold text-gray-700 w-10 bg-green-50">M</th>
-                            <th className="border border-gray-300 px-1 py-1 text-center font-semibold text-gray-700 w-10 bg-green-50">Total</th>
+                            <th className="w-10 bg-green-50">ORG</th>
+                            <th className="w-10 bg-green-50">TE</th>
+                            <th className="w-10 bg-green-50">M</th>
+                            <th className="w-10 bg-green-50">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,27 +110,27 @@ export function TutorTrackingList() {
                                 onClick={() => navigate(`/tutor/seguimiento/${student.studentId}`)}
                                 className="cursor-pointer hover:bg-blue-50/50 transition-colors"
                             >
-                                <td className="border border-gray-200 px-2 py-2 text-center text-gray-600">{idx + 1}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center font-mono text-gray-900">{student.studentId}</td>
-                                <td className="border border-gray-200 px-3 py-2 text-gray-900 whitespace-nowrap">{student.fullName}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center font-medium text-gray-900">{student.promedioBachillerato}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center font-medium text-gray-900">{student.promedioExamenAdmision}</td>
+                                <td className="text-center text-gray-600">{idx + 1}</td>
+                                <td className="text-center font-mono">{student.studentId}</td>
+                                <td className="whitespace-nowrap">{student.fullName}</td>
+                                <td className="text-center font-medium">{student.promedioBachillerato}</td>
+                                <td className="text-center font-medium">{student.promedioExamenAdmision}</td>
                                 {NEC_KEYS.map((k) => (
-                                    <td key={k} className="border border-gray-200 px-1 py-2 text-center">
+                                    <td key={k} className="text-center">
                                         <span className={student.necesidades[k] ? 'text-green-600 font-bold' : 'text-gray-300'}>
                                             {checkOrDash(student.necesidades[k])}
                                         </span>
                                     </td>
                                 ))}
-                                <td className="border border-gray-200 px-2 py-2 text-center font-medium text-gray-900">{student.test1}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center font-medium text-gray-900">{student.test2}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center font-medium text-gray-900">{student.test3}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center font-medium text-gray-900">{student.test4}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center bg-green-50/30">{student.test5.organizacion}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center bg-green-50/30">{student.test5.tecnicasEstudio}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center bg-green-50/30">{student.test5.motivacion}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center font-bold bg-green-50/50">{student.test5.total}</td>
-                                <td className="border border-gray-200 px-2 py-2 text-center font-bold">
+                                <td className="text-center font-medium">{student.test1}</td>
+                                <td className="text-center font-medium">{student.test2}</td>
+                                <td className="text-center font-medium">{student.test3}</td>
+                                <td className="text-center font-medium">{student.test4}</td>
+                                <td className="text-center bg-green-50/30">{student.test5.organizacion}</td>
+                                <td className="text-center bg-green-50/30">{student.test5.tecnicasEstudio}</td>
+                                <td className="text-center bg-green-50/30">{student.test5.motivacion}</td>
+                                <td className="text-center font-bold bg-green-50/50">{student.test5.total}</td>
+                                <td className="text-center font-bold">
                                     <span className={totalMR(student) > 0 ? 'text-red-600' : 'text-gray-400'}>{totalMR(student)}</span>
                                 </td>
                             </tr>
