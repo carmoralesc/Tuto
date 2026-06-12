@@ -23,6 +23,8 @@ import StudentDashboard from "../pages/StudentDashboard";
 import StudentTrackingPage from "../pages/StudentTrackingPage";
 import TutorTrackingListPage from "../pages/TutorTrackingListPage";
 import TutorTrackingPage from "../pages/TutorTrackingPage";
+import TutorSemesterReportListPage from "../pages/TutorSemesterReportListPage";
+import TutorSemesterReportDetailPage from "../pages/TutorSemesterReportDetailPage";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 function RoleIndexRedirect() {
@@ -151,6 +153,22 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <TutorTrackingPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "tutor/reporte-semestral",
+        element: (
+          <ProtectedRoute>
+            <TutorSemesterReportListPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "tutor/reporte-semestral/:studentId",
+        element: (
+          <ProtectedRoute>
+            <TutorSemesterReportDetailPage />
           </ProtectedRoute>
         ),
       },

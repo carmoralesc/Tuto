@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, PrinterIcon } from '@heroicons/react/24/outline';
 import { useStudentTrackingStore } from '@/stores/useStudentTrackingStore';
-import { generateSabanasHTML } from '@/lib/generateSabanasHTML';
+import { generateSingleSabanasHTML } from '@/lib/generateSabanasHTML';
 import { NECESIDADES_LABELS } from '@/constants/tracking-activities';
 import type { StudentTrackingData } from '@/types/student-tracking.types';
 
@@ -37,18 +37,20 @@ export function StudentTrackingView() {
 
     const handlePrint = () => {
         if (!trackingData) return;
-        const html = generateSabanasHTML(
-            [trackingData],
+        const html = generateSingleSabanasHTML(
+            trackingData,
             'Mtra. Laura Sánchez',
             'Ingeniería en Sistemas Computacionales',
             '2025A',
         );
-        const w = window.open('', '_blank', 'width=1200,height=800');
+        const w = window.open('', '_blank', 'width=900,height=700');
         if (!w) return;
         w.document.write(html);
         w.document.close();
         w.focus();
-        setTimeout(() => w.print(), 500);
+        // Imprimir directamente; cerrar al terminar
+        w.onafterprint = () => w.close();
+        setTimeout(() => w.print(), 400);
     };
 
     if (!trackingData) {
@@ -87,7 +89,7 @@ export function StudentTrackingView() {
                 </div>
                 <button
                     onClick={handlePrint}
-                    className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition"
+                    className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all duration-300"
                 >
                     <PrinterIcon className="h-5 w-5" />
                     Imprimir Sábana
@@ -95,17 +97,17 @@ export function StudentTrackingView() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="rounded-2xl bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur p-4">
                     <span className="text-sm text-gray-500">Promedio Bachillerato (P.B.)</span>
                     <p className="text-2xl font-bold text-gray-900">{trackingData.promedioBachillerato}</p>
                 </div>
-                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="rounded-2xl bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur p-4">
                     <span className="text-sm text-gray-500">Promedio Examen Admisión (P.E.A.)</span>
                     <p className="text-2xl font-bold text-gray-900">{trackingData.promedioExamenAdmision}</p>
                 </div>
             </div>
 
-            <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <section className="rounded-2xl bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-3">Detección de necesidades</h2>
                 {necesidadesActivas.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
@@ -120,7 +122,7 @@ export function StudentTrackingView() {
                 )}
             </section>
 
-            <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <section className="rounded-2xl bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-3">Resultados de tests</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <TestCard label="Test 1 – Representación" value={TEST1_LABELS[trackingData.test1] ?? trackingData.test1} />
@@ -152,7 +154,7 @@ export function StudentTrackingView() {
                 </div>
             </section>
 
-            <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <section className="rounded-2xl bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">Total de materias reprobadas</h2>
                 <p className={`text-3xl font-bold ${totalMR(trackingData) > 0 ? 'text-red-600' : 'text-gray-400'}`}>
                     {totalMR(trackingData)}
@@ -164,7 +166,7 @@ export function StudentTrackingView() {
 
 function TestCard({ label, value }: { label: string; value: string }) {
     return (
-        <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+        <div className="rounded-2xl bg-gray-50 p-4 ring-1 ring-gray-200">
             <span className="text-xs text-gray-500">{label}</span>
             <p className="text-lg font-bold text-gray-900 mt-1">{value}</p>
         </div>

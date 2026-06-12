@@ -1,3 +1,115 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ─── Scrollbar sutil: oculta hasta hover, tono gris ────────── */
+@layer base {
+
+    /* Ocultar por defecto en elementos con overflow */
+    .scrollbar-hidden {
+        scrollbar-width: none;
+        /* Firefox */
+    }
+
+    .scrollbar-hidden::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+
+    /* Mostrar solo en hover */
+    .scrollbar-on-hover:hover {
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 transparent;
+    }
+
+    .scrollbar-on-hover:hover::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+
+    .scrollbar-on-hover:hover::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .scrollbar-on-hover:hover::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 999px;
+    }
+
+    .scrollbar-on-hover:hover::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+}
+
+/* ─── Tablas estilo Login ───────────────────────────────────── */
+@layer components {
+    .table-tutortec {
+        @apply w-full text-xs border-collapse;
+    }
+
+    .table-tutortec thead tr:first-child {
+        @apply bg-gradient-to-r from-blue-50 to-indigo-50;
+    }
+
+    .table-tutortec thead tr:first-child th {
+        @apply border border-gray-200 px-2 py-2.5 text-center font-bold text-gray-800;
+    }
+
+    .table-tutortec thead tr:nth-child(2) th {
+        @apply border border-gray-200 px-1 py-1.5 text-center font-semibold text-gray-700 bg-gray-50;
+    }
+
+    .table-tutortec tbody td {
+        @apply border border-gray-100 px-2 py-2;
+    }
+
+    .table-tutortec tbody tr {
+        @apply transition-colors duration-150;
+    }
+
+    .table-tutortec tbody tr:hover {
+        @apply bg-blue-50/50;
+    }
+
+    .table-tutortec tfoot td {
+        @apply border border-gray-200 px-2 py-2;
+    }
+
+    .table-tutortec tfoot tr {
+        @apply bg-gradient-to-r from-gray-50 to-blue-50/30 font-bold text-xs;
+    }
+}
+
+/* ─── Impresión: mostrar tabla completa sin scroll ──────────── */
+@layer components {
+    @media print {
+        .table-tutortec-wrapper {
+            overflow-x: visible !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            background: white !important;
+        }
+
+        .table-tutortec {
+            font-size: 7px !important;
+        }
+
+        .table-tutortec thead tr:first-child {
+            background: #f1f5f9 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .table-tutortec thead tr:first-child th,
+        .table-tutortec thead tr:nth-child(2) th,
+        .table-tutortec tbody td,
+        .table-tutortec tfoot td {
+            padding: 1px 2px !important;
+        }
+
+        body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    }
+}

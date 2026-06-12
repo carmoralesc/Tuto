@@ -58,7 +58,7 @@ export default function TutorDashboardPage() {
     const previousProposal = previousProposals.length > 0 ? previousProposals[previousProposals.length - 1] : undefined;
 
     return (
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         <ProposalDetail
           proposalId={selectedId}
           proposal={currentProposal}
@@ -72,7 +72,7 @@ export default function TutorDashboardPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
       <h1 className="text-2xl font-bold text-gray-900">Panel del Tutor</h1>
       <ProposalsTable proposals={proposals} onSelectProposal={handleSelectProposal} />
     </div>
